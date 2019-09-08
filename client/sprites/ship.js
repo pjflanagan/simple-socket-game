@@ -78,6 +78,7 @@ Ship.prototype.update = function () {
 		velocity = shipProps.velocity;
 	}
 
+	this.rotation = this.state.p.a;
 	this.game.physics.arcade.velocityFromAngle(directionAngles[y + x], velocity, this.body.velocity);
 }
 
@@ -99,17 +100,16 @@ Ship.prototype.shareSelf = function () {
 			y: this.body.velocity.y,
 		},
 		h: 100, // health this.health (Health is a Phaser property)
-		k: { // keys
-			u: this.state.k.u, // up
-			l: this.state.k.l, // left
-			r: this.state.k.r, // right
-			d: this.state.k.d // down
-		}
+		k: this.state.k
 	};
 }
 
 Ship.prototype.recvKeyChange = function (keys) {
 	this.state.k = keys;
+}
+
+Ship.prototype.recvAngleChange = function (angle) {
+	this.state.p.a = angle
 }
 
 // Ship.prototype.reload = function () {

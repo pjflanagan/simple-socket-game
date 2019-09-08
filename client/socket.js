@@ -13,6 +13,7 @@ class ClientSocket {
 
 		this.socket.on('death', (data) => self.removeUser(data));
 		this.socket.on('keyChange', (data) => self.recvKeyChange(data));
+		this.socket.on('angleChange', (data) => self.recvAngleChange(data));
 		this.socket.on('stateUpdate', (data) => self.recvStateUpdate(data));
 		this.socket.on('fire', (data) => self.recvFire(data));
 	}
@@ -44,6 +45,14 @@ class ClientSocket {
 
 	recvKeyChange(data) {
 		this.app.recvKeyChange(data);
+	}
+
+	sendAngleChange(data) {
+		this.socket.emit('angleChange', data);
+	}
+
+	recvAngleChange(data) {
+		this.app.recvAngleChange(data);
 	}
 
 	sendStateUpdate(data) {

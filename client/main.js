@@ -40,25 +40,47 @@ App.Main.prototype = {
 		this.game.load.image('bg', '/client/assets/img_bg.png');
 
 		this.user = {
-			keyValues: { u: false, d: false, l: false, r: false },
-			listener: () => this.sendKeyChange(),
-			registerListener: (func) => { this.listener = func; },
+			values: {
+				keys: { u: false, d: false, l: false, r: false },
+				angle: 0
+			},
+			handlers: {
+				keys: () => this.sendKeyChange(),
+				angle: () => this.sendAngleChange(),
+			},
+			diff: {
+				keys: (newKeys) => (
+					newKeys.u !== this.user.values.keys.u ||
+					newKeys.d !== this.user.values.keys.d ||
+					newKeys.l !== this.user.values.keys.l ||
+					newKeys.r !== this.user.values.keys.r
+				),
+				angle: (newAngle) => (
+					Math.abs(newAngle - this.user.values.angle) > .15
+				)
+			},
+			mouse: { x: 0, y: 0 },
 			set keys(newKeys) {
-				if (this.isDiff(newKeys)) {
-					this.keyValues = newKeys;
-					this.listener();
+				if (this.diff.keys(newKeys)) {
+					this.values.keys = newKeys;
+					this.handlers.keys();
 				}
 			},
 			get keys() {
-				return this.keyValues;
+				return this.values.keys;
 			},
-			isDiff: (newKeys) => (
-				newKeys.u !== this.user.keyValues.u ||
-				newKeys.d !== this.user.keyValues.d ||
-				newKeys.l !== this.user.keyValues.l ||
-				newKeys.r !== this.user.keyValues.r
-			)
+			set angle(newAngle) {
+				if (this.diff.angle(newAngle)) {
+					this.values.angle = newAngle;
+					this.handlers.angle();
+				}
+			},
+			get angle() {
+				return this.values.angle;
+			}
 		};
+		window.addEventListener("mousemove", (e) => { this.user.mouse.x = e.clientX; this.user.mouse.y = e.clientY; });
+
 	},
 
 	create: function () {
@@ -72,11 +94,10 @@ App.Main.prototype = {
 
 		this.socket = new ClientSocket(this);
 
-		this.keyLeft = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-		this.keyRight = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-		this.keyUp = this.game.input.keyboard.addKey(Phaser.Keyboard.UP);
-		this.keyDown = this.game.input.keyboard.addKey(Phaser.Keyboard.DOWN);
-		this.keyFire = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		this.keyLeft = this.game.input.keyboard.addKey(Phaser.KeyCode.A);
+		this.keyRight = this.game.input.keyboard.addKey(Phaser.KeyCode.D);
+		this.keyUp = this.game.input.keyboard.addKey(Phaser.KeyCode.W);
+		this.keyDown = this.game.input.keyboard.addKey(Phaser.KeyCode.S);
 	},
 
 	update: function () {
@@ -98,14 +119,10 @@ App.Main.prototype = {
 			d: this.keyDown.isDown
 		};
 
-		// this.self.state.k = {
-		// 	r: this.keyRight.isDown,
-		// 	l: this.keyLeft.isDown,
-		// 	u: this.keyUp.isDown,
-		// 	d: this.keyDown.isDown
-		// }
 
-		if (this.keyFire.isDown) this.self.sendFire();
+		const dx = this.self.body.x - this.game.camera.x - this.user.mouse.x;
+		const dy = this.self.body.y - this.game.camera.y - this.user.mouse.y;
+		this.user.angle = Math.atan2(dy, dx) - Math.PI / 4;
 	},
 
 	// socket functions
@@ -142,6 +159,21 @@ App.Main.prototype = {
 		this.ShipGroup.forEach(function (ship) {
 			if (ship.state.i === data.i) {
 				ship.recvKeyChange(data.k);
+			}
+		});
+	},
+
+	sendAngleChange: function () {
+		this.socket.sendAngleChange({
+			i: this.self.state.i,
+			a: this.user.angle
+		})
+	},
+
+	recvAngleChange: function (data) {
+		this.ShipGroup.forEach(function (ship) {
+			if (ship.state.i === data.i) {
+				ship.recvAngleChange(data.a);
 			}
 		});
 	},

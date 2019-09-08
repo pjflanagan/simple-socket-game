@@ -13,6 +13,7 @@ class ServerSocket {
 			socket.on('disconnect', () => self.recvDisconnect(socket));
 			socket.on('shareSelf', (data) => self.shareSelf(socket, data));
 			socket.on('keyChange', (data) => self.keyChange(data));
+			socket.on('angleChange', (data) => self.angleChange(data));
 			socket.on('stateUpdate', (data) => self.stateUpdate(socket, data));
 
 			socket.on('fire', (data) => self.fire(data));
@@ -62,6 +63,11 @@ class ServerSocket {
 	// key change
 	keyChange(data) {
 		this.io.emit('keyChange', data);
+	}
+
+	// key change
+	angleChange(data) {
+		this.io.emit('angleChange', data);
 	}
 
 	// fire
