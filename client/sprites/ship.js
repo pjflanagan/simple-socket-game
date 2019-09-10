@@ -1,18 +1,7 @@
-import { bulletProps } from './bullet.js';
+import { BULLET_PROPS, SHIP_PROPS } from '/shared/index.js';
 
 Math.radians = function (degrees) {
 	return degrees * Math.PI / 180; // Converts from degrees to radians
-};
-
-const shipProps = {
-	acceleration: 320,
-	drag: 40,
-	velocity: 260,
-	angularVelocity: 500,
-	default: {
-		angle: -90
-	},
-	reloadInterval: 200
 };
 
 const ff = 45;
@@ -49,9 +38,8 @@ const Ship = function (app, game, data) {
 
 	// enable physics on the Ship
 	this.game.physics.enable(this, Phaser.Physics.ARCADE);
-	this.body.drag.set(shipProps.drag);
 	this.body.collideWorldBounds = true;
-	this.body.maxVelocity = shipProps.velocity; // shipProps.velocity;
+	this.body.maxVelocity = SHIP_PROPS.velocity;
 
 	// let self = this;
 	// this.interval = setInterval(() => {
@@ -70,12 +58,12 @@ Ship.prototype.update = function () {
 
 	if (this.state.k.l !== this.state.k.r) {
 		x = (this.state.k.l) ? 'W' : 'E';
-		velocity = shipProps.velocity;
+		velocity = SHIP_PROPS.velocity;
 	}
 
 	if (this.state.k.u !== this.state.k.d) {
 		y = (this.state.k.u) ? 'N' : 'S';
-		velocity = shipProps.velocity;
+		velocity = SHIP_PROPS.velocity;
 	}
 
 	this.rotation = this.state.p.a;
@@ -118,24 +106,6 @@ Ship.prototype.recvAngleChange = function (angle) {
 // 		self.fireable = true;
 // 	}, bulletProps.interval);
 
-// }
-
-// Ship.prototype.sendFire = function () {
-// 	if (!this.fireable)
-// 		return;
-// 	this.fireable = false;
-// 	this.reload();
-
-// 	let x = this.body.x + this.body.halfWidth;
-// 	let y = this.body.y + this.body.halfHeight;
-// 	this.app.sendFire({
-// 		i: this.state.i,
-// 		p: {
-// 			x: x,
-// 			y: y,
-// 			a: Math.radians(this.body.rotation)
-// 		}
-// 	});
 // }
 
 

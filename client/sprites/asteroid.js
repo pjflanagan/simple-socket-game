@@ -1,4 +1,10 @@
-import { BULLET_PROPS } from '/shared/index.js';
+
+const bulletProps = {
+	speed: 600,
+	interval: 420,
+	lifespan: 600,
+	maxCount: 90,
+};
 
 /**
  * @class Bullet @extends PHaser.Sprite
@@ -9,7 +15,7 @@ var Bullet = function (app, game, data) {
 	this.userID = data.i;
 
 	this.anchor.set(.5, .5);
-	this.lifespan = BULLET_PROPS.lifespan;
+	this.lifespan = bulletProps.lifespan;
 	this.reset(data.p.x, data.p.y);
 
 	this.animations.add('fire', [0, 1, 2]);
@@ -18,7 +24,7 @@ var Bullet = function (app, game, data) {
 
 	// enable physics on the bullet
 	this.game.physics.enable(this, Phaser.Physics.ARCADE);
-	this.game.physics.arcade.velocityFromRotation(data.p.a, BULLET_PROPS.speed, this.body.velocity);
+	this.game.physics.arcade.velocityFromRotation(data.p.a, bulletProps.speed, this.body.velocity);
 };
 
 Bullet.prototype = Object.create(Phaser.Sprite.prototype);
@@ -29,4 +35,4 @@ Bullet.prototype.hit = function () {
 	this.kill();
 }
 
-export { Bullet, BULLET_PROPS };
+export { Bullet, bulletProps };

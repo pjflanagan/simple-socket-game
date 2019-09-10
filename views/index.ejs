@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+
+<head>
+	<% include templates/head.ejs %>
+	<!-- <link rel="stylesheet" type="text/css" href="/client/styles/index.css"> -->
+</head>
+
+<body>
+	<input id="name" type="text" placeholder="NAME" />
+	<input id="play" type="button" value="PLAY" />
+</body>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+	$('#play').click(function () {
+		const name = $('#name').val();
+		$(location).attr('href', `/game?name=${name}`);
+	});
+</script>
+
+</html>

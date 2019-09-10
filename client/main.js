@@ -1,7 +1,7 @@
 import { ClientSocket } from './socket.js';
 import { Ship } from './sprites/ship.js';
 import { Bullet } from './sprites/bullet.js';
-import { GAME } from '../shared/const.js';
+import { GAME } from '../shared/index.js';
 
 /**
  * @event onload
@@ -80,6 +80,7 @@ App.Main.prototype = {
 			}
 		};
 		window.addEventListener("mousemove", (e) => { this.user.mouse.x = e.clientX; this.user.mouse.y = e.clientY; });
+		window.addEventListener("mousedown", (e) => { this.handleClick(); })
 
 	},
 
@@ -120,9 +121,27 @@ App.Main.prototype = {
 		};
 
 
-		const dx = this.self.body.x - this.game.camera.x - this.user.mouse.x;
-		const dy = this.self.body.y - this.game.camera.y - this.user.mouse.y;
+		const dx = (this.self.body.x + this.self.body.halfWidth) - this.game.camera.x - this.user.mouse.x;
+		const dy = (this.self.body.y + this.self.body.halfHeight) - this.game.camera.y - this.user.mouse.y;
 		this.user.angle = Math.atan2(dy, dx) - Math.PI / 4;
+	},
+
+	handleClick: function () {
+		// if (!this.fireable)
+		// 	return;
+		this.fireable = false;
+		// this.reload();
+
+		let x = this.self.body.x + this.self.body.halfWidth;
+		let y = this.self.body.y + this.self.body.halfHeight;
+		this.socket.sendFire({
+			i: this.self.state.i,
+			p: {
+				x: x,
+				y: y,
+				a: this.user.angle - 3 * Math.PI / 4
+			}
+		});
 	},
 
 	// socket functions

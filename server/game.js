@@ -1,7 +1,7 @@
 
-import { defaultUserState } from '../shared/const.js'
+import { defaultUserState } from '../shared'
 
-class Room {
+class Game {
 	constructor(server) {
 		this.server = server;
 		this.users = []; // in order by host
@@ -30,4 +30,4 @@ class Room {
 	// }
 }
 
-export { Room };
+export { Game };

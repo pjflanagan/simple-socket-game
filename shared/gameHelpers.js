@@ -1,25 +1,31 @@
 /**
  * @constant
  */
-const STATE = {
-	INIT: 0,
-	START: 1,
-	PLAY: 2,
-	GAMEOVER: 3
-};
-const GAME = {
-	STONES: ["POWER", "SPACE", "REALITY", "SOUL", "TIME", "MIND"],
+
+export const GAME = {
 	MAX_SHIPS: 30,
 	WORLD: {
 		WIDTH: 1000,
 		HEIGHT: 1000
+	},
+	ASTEROIDS: 20,
+	TEAM: {
+		RED: 1,
+		BLUE: 2
 	}
 };
-const ACTIONS = {
-	CONNECT: 'connection'
-}
 
-const defaultUserState = function (userID) {
+export const BULLET_PROPS = {
+	speed: 360,
+	interval: 420,
+	lifespan: 1000,
+};
+
+export const SHIP_PROPS = {
+	velocity: 240
+};
+
+export const defaultUserState = function (userID, team) {
 	return {
 		i: userID, // id
 		p: { // position
@@ -35,9 +41,8 @@ const defaultUserState = function (userID) {
 		k: { // keys
 			u: false, // up
 			l: false, // left
-			r: false // right
+			r: false, // right
+			d: false
 		}
 	};
 }
-
-export { defaultUserState, GAME };

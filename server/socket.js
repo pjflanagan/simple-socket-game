@@ -1,9 +1,9 @@
-import { Room } from './room.js'
+import { Game } from './game.js'
 // https://socket.io/docs/emit-cheatsheet/
 
 class ServerSocket {
 	constructor(io) {
-		this.addRoom(new Room(this));
+		this.game = new Game(this);
 
 		this.io = io;
 		this.io.on('connection', (socket) => {
@@ -20,14 +20,14 @@ class ServerSocket {
 		});
 	}
 
-	addRoom(room) {
-		this.room = room; // server socket should have multiple games this.rooms.push(room)
+	addRoom(game) {
+		this.game = game; // server socket should have multiple games this.games.push(game)
 	}
 
 	// connect
 	recvConnection(socket) {
 		console.log('connection:', socket.id);
-		this.room.connection(socket);
+		this.game.connection(socket);
 	}
 
 	sendConnection(socket, user) {
@@ -37,7 +37,7 @@ class ServerSocket {
 
 	// disconnect
 	recvDisconnect(socket) {
-		this.room.disconnect(socket);
+		this.game.disconnect(socket);
 	}
 
 	sendDisconnect(socket) {
