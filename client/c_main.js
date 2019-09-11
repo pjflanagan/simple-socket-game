@@ -31,9 +31,14 @@ App.Main.prototype = {
 			100, 100, 2
 		);
 		this.game.load.spritesheet(
-			'imgBullet',
-			'/client/assets/img_bullet.png',
-			18, 18, 3
+			'imgRedBullet',
+			'/client/assets/img_red_bullet.png',
+			16, 16, 3
+		);
+		this.game.load.spritesheet(
+			'imgBlueBullet',
+			'/client/assets/img_blue_bullet.png',
+			16, 16, 3
 		);
 
 		this.game.load.image('bg', '/client/assets/img_bg.png');

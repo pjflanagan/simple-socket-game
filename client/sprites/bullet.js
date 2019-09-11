@@ -4,7 +4,7 @@ import { BULLET_PROPS } from '/helpers/index.js';
  * @class Bullet @extends PHaser.Sprite
  */
 var Bullet = function (app, game, data) {
-	Phaser.Sprite.call(this, game, data.p.x, data.p.y, 'imgBullet');
+	Phaser.Sprite.call(this, game, data.p.x, data.p.y, 'imgBlueBullet');
 	this.app = app;
 	this.userID = data.i;
 
