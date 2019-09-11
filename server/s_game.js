@@ -4,20 +4,17 @@ import { defaultUserState, GAME } from '../helpers'
 class Game {
 	constructor(server) {
 		this.server = server;
-		this.users = []; // in order by host
+    this.users = {};
 	}
-
-	// size - size of room
-	// high scores - high scores of the room
 
 	connection(socket) {
 		const userState = defaultUserState(socket.id, this.selectTeam());
-		this.users[userState.i] = userState;
+    this.users[userState.i] = userState;
 		this.server.sendConnection(socket, userState);
 	}
 
 	disconnect(socket) {
-		delete this.users[socket.id]
+    delete this.users[socket.id]
 		this.server.sendDisconnect(socket);
 	}
 
@@ -30,7 +27,16 @@ class Game {
 	// }
 
 	selectTeam() {
-		return GAME.TEAM.RED;
+    let blue = 0;
+    let red = 0;
+    for (const [key, value] of Object.entries(this.users)) {
+      if (value.t === GAME.TEAM.RED) {
+        ++red;
+      } else {
+        ++blue;
+      }
+    };
+		return (red <= blue) ? GAME.TEAM.RED : GAME.TEAM.BLUE;
 	}
 }
 

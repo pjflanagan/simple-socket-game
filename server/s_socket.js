@@ -19,11 +19,7 @@ class ServerSocket {
 			socket.on(EVENTS.stateUpdate, (data) => self.stateUpdate(socket, data));
 			socket.on(EVENTS.fire, (data) => self.fire(data));
 		});
-	}
-
-	addRoom(game) {
-		this.game = game; // server socket should have multiple games this.games.push(game)
-	}
+  }
 
 	// connect
 	recvConnection(socket) {
@@ -34,7 +30,7 @@ class ServerSocket {
 	sendConnection(socket, user) {
 		socket.broadcast.emit(EVENTS.addNewUser, user);
 		this.io.to(`${user.i}`).emit(EVENTS.addSelf, user);
-	}
+  }
 
 	// disconnect
 	recvDisconnect(socket) {

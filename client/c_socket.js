@@ -6,35 +6,35 @@ class ClientSocket {
 		this.app = app;
 		const self = this;
 
-		this.socket.on(EVENTS.addSelf, (data) => self.addSelf(data));
-		this.socket.on(EVENTS.addUser, (data) => self.addUser(data))
+		this.socket.on(EVENTS.addSelf, (data) => self.recvAddSelf(data));
+		this.socket.on(EVENTS.addUser, (data) => self.recvAddUser(data))
 		this.socket.on(EVENTS.addNewUser, (data) => {
-			self.addUser(data);
-			self.shareSelf(data);
+			self.recvAddUser(data);
+			self.sendShareSelf(data);
 		});
 
-		this.socket.on(EVENTS.death, (data) => self.removeUser(data));
+		this.socket.on(EVENTS.death, (data) => self.recvRemoveUser(data));
 		this.socket.on(EVENTS.keyChange, (data) => self.recvKeyChange(data));
 		this.socket.on(EVENTS.angleChange, (data) => self.recvAngleChange(data));
 		this.socket.on(EVENTS.stateUpdate, (data) => self.recvStateUpdate(data));
 		this.socket.on(EVENTS.fire, (data) => self.recvFire(data));
 	}
 
-	addSelf(data) {
+	recvAddSelf(data) {
 		this.app.addSelf(data);
 	}
 
-	addUser(data) {
+	recvAddUser(data) {
 		this.app.addUser(data);
 	}
 
-	removeUser(userID) {
-		// right now data is just the user id but 
+	recvRemoveUser(userID) {
+		// TODO: right now data is just the user id but
 		// it should also have who killed them to keep score
 		this.app.removeUser(userID);
 	}
 
-	shareSelf(data) {
+	sendShareSelf(data) {
 		this.socket.emit(EVENTS.shareSelf, {
 			to: data.i,
 			user: this.app.shareSelf()

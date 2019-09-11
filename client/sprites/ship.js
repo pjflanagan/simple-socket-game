@@ -1,4 +1,4 @@
-import { SHIP_PROPS } from '/helpers/index.js';
+import { SHIP_PROPS, GAME } from '/helpers/index.js';
 
 Math.radians = function (degrees) {
 	return degrees * Math.PI / 180; // Converts from degrees to radians
@@ -26,14 +26,19 @@ const Ship = function (app, game, data) {
 	this.game = game;
 
 	this.state = data;
+  this.team = data.t;
+	this.fireable = true;
 
 	this.anchor.set(0.5, 0.5);
 	this.angle = data.p.a;
 
-	// this.index = index;
-	// var i=index*2;
-	this.animations.add('gasOn', [1]);
-	this.animations.add('gasOff', [0]);
+  if(this.team === GAME.TEAM.RED) {
+    this.animations.add('red', [0]);
+    this.animations.play('red');
+  } else {
+    this.animations.add('blue', [1]);
+    this.animations.play('blue');
+  }
 	this.scale.setTo(.5, .5);
 
 	// enable physics on the Ship
@@ -46,7 +51,6 @@ const Ship = function (app, game, data) {
 	// 	self.app.sendStateUpdate();
 	// }, 500);
 
-	this.fireable = true;
 };
 
 Ship.prototype = Object.create(Phaser.Sprite.prototype);
@@ -77,7 +81,8 @@ Ship.prototype.death = function () {
 
 Ship.prototype.shareSelf = function () {
 	return {
-		i: this.state.i,
+    i: this.state.i,
+    t: this.team,
 		p: {
 			x: this.x,
 			y: this.y,

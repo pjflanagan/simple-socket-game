@@ -1,6 +1,7 @@
 import { ClientSocket } from './c_socket.js';
 import { Ship, Laser } from './sprites/index.js';
 import { GAME } from '../helpers/index.js';
+import { Player } from './c_player.js';
 
 /**
  * @event onload
@@ -43,49 +44,7 @@ App.Main.prototype = {
 
 		this.game.load.image('bg', '/client/assets/img_bg.png');
 
-		this.user = {
-			values: {
-				keys: { u: false, d: false, l: false, r: false },
-				angle: 0
-			},
-			handlers: {
-				keys: () => this.sendKeyChange(),
-				angle: () => this.sendAngleChange(),
-			},
-			diff: {
-				keys: (newKeys) => (
-					newKeys.u !== this.user.values.keys.u ||
-					newKeys.d !== this.user.values.keys.d ||
-					newKeys.l !== this.user.values.keys.l ||
-					newKeys.r !== this.user.values.keys.r
-				),
-				angle: (newAngle) => (
-					Math.abs(newAngle - this.user.values.angle) > .15
-				)
-			},
-			mouse: { x: 0, y: 0 },
-			set keys(newKeys) {
-				if (this.diff.keys(newKeys)) {
-					this.values.keys = newKeys;
-					this.handlers.keys();
-				}
-			},
-			get keys() {
-				return this.values.keys;
-			},
-			set angle(newAngle) {
-				if (this.diff.angle(newAngle)) {
-					this.values.angle = newAngle;
-					this.handlers.angle();
-				}
-			},
-			get angle() {
-				return this.values.angle;
-			}
-		};
-		window.addEventListener("mousemove", (e) => { this.user.mouse.x = e.clientX; this.user.mouse.y = e.clientY; });
-		window.addEventListener("mousedown", (e) => { this.handleClick(); })
-
+    this.player = new Player(this);
 	},
 
 	create: function () {
@@ -109,48 +68,18 @@ App.Main.prototype = {
 		this.ShipGroup.forEach(function (ship) {
 			ship.update();
 		});
-		this.userInput();
-	},
-
-	// input
-
-	userInput: function () {
-		if (!this.self) return;
-
-		this.user.keys = {
+		this.player.input(this.self, this.game, {
 			r: this.keyRight.isDown,
 			l: this.keyLeft.isDown,
 			u: this.keyUp.isDown,
 			d: this.keyDown.isDown
-		};
-
-
-		const dx = (this.self.body.x + this.self.body.halfWidth) - this.game.camera.x - this.user.mouse.x;
-		const dy = (this.self.body.y + this.self.body.halfHeight) - this.game.camera.y - this.user.mouse.y;
-		this.user.angle = Math.atan2(dy, dx) - Math.PI / 4;
-	},
-
-	handleClick: function () {
-		// if (!this.fireable)
-		// 	return;
-		this.fireable = false;
-		// this.reload();
-
-		let x = this.self.body.x + this.self.body.halfWidth;
-		let y = this.self.body.y + this.self.body.halfHeight;
-		this.socket.sendFire({
-			i: this.self.state.i,
-			p: {
-				x: x,
-				y: y,
-				a: this.user.angle - 3 * Math.PI / 4
-			}
 		});
 	},
 
 	// socket functions
 
 	addSelf: function (data) {
+    console.log(data);
 		this.self = new Ship(this, this.game, data);
 		this.ShipGroup.add(this.self);
 		this.game.camera.follow(this.self);
@@ -174,7 +103,7 @@ App.Main.prototype = {
 	sendKeyChange: function () {
 		this.socket.sendKeyChange({
 			i: this.self.state.i,
-			k: this.user.keys
+			k: this.player.keys
 		});
 	},
 
@@ -189,7 +118,7 @@ App.Main.prototype = {
 	sendAngleChange: function () {
 		this.socket.sendAngleChange({
 			i: this.self.state.i,
-			a: this.user.angle
+			a: this.player.angle
 		})
 	},
 
@@ -213,8 +142,16 @@ App.Main.prototype = {
 		})
 	},
 
-	sendFire: function (data) {
-		this.socket.sendFire(data);
+	sendFire: function ({x,y}) {
+    this.socket.sendFire({
+      i: this.self.state.i,
+      t: this.self.team,
+			p: {
+				x,
+				y,
+				a: this.player.angle - 3 * Math.PI / 4
+			}
+		});
 	},
 
 	recvFire: function (data) {
