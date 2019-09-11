@@ -3,18 +3,33 @@
 
 <head>
 	<% include templates/head.ejs %>
-	<!-- <link rel="stylesheet" type="text/css" href="/client/styles/index.css"> -->
 </head>
 
 <body>
-	<input id="name" type="text" placeholder="NAME" />
-	<input id="play" type="button" value="PLAY" />
+	<div class="input-holder">
+		<p class="prompt">Type name and press enter...</p>
+		<p class="name"></p>
+	</div>
 </body>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script>
-	$('#play').click(function () {
-		const name = $('#name').val();
-		$(location).attr('href', `/game?name=${name}`);
+	let name = ''
+
+	$(document).on('keypress', function (e) {
+		var letter = String.fromCharCode(e.keyCode);
+		if (/[a-zA-Z0-9-_ ]/.test(letter)) {
+			name += letter;
+			$('p.name').text(name);
+		};
+	});
+
+	$(document).on('keydown', function (e) {
+		if ((e.keyCode === 8 || e.key === 'Backspace') && name.length > 0) {
+			name = name.substr(0, name.length - 1);
+			$('p.name').text(name)
+		} else if (e.which === 13) {
+			$(location).attr('href', `/game?name=${name}`);
+		}
 	});
 </script>
 
