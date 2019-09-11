@@ -10,10 +10,10 @@ import bodyParser from 'body-parser';
 import { ServerSocket } from './s_socket.js'
 // import compression from 'compression';
 
-let app = express();
-let server = http.Server(app);
-let io = new SocketIO(server);
-let port = process.env.PORT || 3000;
+const app = express();
+const server = http.Server(app);
+const io = new SocketIO(server);
+const port = process.env.PORT || 5164;
 new ServerSocket(io);
 
 app.set('view engine', 'ejs');
