@@ -15,7 +15,7 @@ export const GAME = {
 	}
 };
 
-export const BULLET_PROPS = {
+export const LASER_PROPS = {
 	speed: 360,
 	interval: 420,
 	lifespan: 1000,

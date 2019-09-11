@@ -1,5 +1,5 @@
 import { ClientSocket } from './c_socket.js';
-import { Ship, Bullet } from './sprites/index.js';
+import { Ship, Laser } from './sprites/index.js';
 import { GAME } from '../helpers/index.js';
 
 /**
@@ -31,13 +31,13 @@ App.Main.prototype = {
 			100, 100, 2
 		);
 		this.game.load.spritesheet(
-			'imgRedBullet',
-			'/client/assets/img_red_bullet.png',
+			'imgRedLaser',
+			'/client/assets/img_red_laser.png',
 			16, 16, 3
 		);
 		this.game.load.spritesheet(
-			'imgBlueBullet',
-			'/client/assets/img_blue_bullet.png',
+			'imgBlueLaser',
+			'/client/assets/img_blue_laser.png',
 			16, 16, 3
 		);
 
@@ -94,7 +94,7 @@ App.Main.prototype = {
 		this.game.stage.disableVisibilityChange = true; // keep game running if it loses the focus
 		this.game.physics.startSystem(Phaser.Physics.ARCADE); // start the Phaser arcade physics engine
 
-		this.BulletGroup = this.game.add.group();
+		this.LaserGroup = this.game.add.group();
 		this.ShipGroup = this.game.add.group();
 
 		this.socket = new ClientSocket(this);
@@ -218,7 +218,7 @@ App.Main.prototype = {
 	},
 
 	recvFire: function (data) {
-		this.BulletGroup.add(new Bullet(this, this.game, data));
+		this.LaserGroup.add(new Laser(this, this.game, data));
 	}
 
 };

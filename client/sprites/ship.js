@@ -104,7 +104,7 @@ Ship.prototype.recvAngleChange = function (angle) {
 // 	var self = this;
 // 	this.interval = setTimeout(function () {
 // 		self.fireable = true;
-// 	}, bulletProps.interval);
+// 	}, laserProps.interval);
 
 // }
 
