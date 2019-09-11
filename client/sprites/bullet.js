@@ -1,4 +1,4 @@
-import { BULLET_PROPS } from '/shared/index.js';
+import { BULLET_PROPS } from '/helpers/index.js';
 
 /**
  * @class Bullet @extends PHaser.Sprite
@@ -29,4 +29,4 @@ Bullet.prototype.hit = function () {
 	this.kill();
 }
 
-export { Bullet, BULLET_PROPS };
+export { Bullet };

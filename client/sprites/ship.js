@@ -1,4 +1,4 @@
-import { BULLET_PROPS, SHIP_PROPS } from '/shared/index.js';
+import { SHIP_PROPS } from '/helpers/index.js';
 
 Math.radians = function (degrees) {
 	return degrees * Math.PI / 180; // Converts from degrees to radians
