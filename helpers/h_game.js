@@ -22,7 +22,7 @@ export const LASER_PROPS = {
 };
 
 export const SHIP_PROPS = {
-	velocity: 240
+	velocity: 240,
 };
 
 export const defaultUserState = function (userID, team) {

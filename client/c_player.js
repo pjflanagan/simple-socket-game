@@ -1,73 +1,77 @@
+import { LASER_PROPS } from '/helpers/index.js';
 
 class Player {
-  constructor(app) {
-    this.app = app;
+	constructor(app) {
+		this.app = app;
 
+		this.fireable = true;
+		this.mouse = { x: 0, y: 0 };
+		this.values = {
+			keys: { u: false, d: false, l: false, r: false },
+			angle: 0
+		};
 
-    this.mouse = { x: 0, y: 0 };
-    this.values = {
-      keys: { u: false, d: false, l: false, r: false },
-      angle: 0
-    };
-    
-    window.addEventListener("mousemove", (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
+		window.addEventListener("mousemove", (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
 		window.addEventListener("mousedown", (e) => { this.handleClick(); })
-  }
+	}
 
-  get keys() {
-    return this.values.keys;
-  }
-  
-  set keys(newKeys) {
-    if (this.diffKeys(newKeys)) {
-      this.values.keys = newKeys;
-      this.app.sendKeyChange();
-    }
-  }
+	get keys() {
+		return this.values.keys;
+	}
 
-  diffKeys(newKeys) {
-    return newKeys.u !== this.values.keys.u ||
-      newKeys.d !== this.values.keys.d ||
-      newKeys.l !== this.values.keys.l ||
-      newKeys.r !== this.values.keys.r;
-  }
+	set keys(newKeys) {
+		if (this.diffKeys(newKeys)) {
+			this.values.keys = newKeys;
+			this.app.sendKeyChange();
+		}
+	}
 
-  get angle() {
-    return this.values.angle;
-  }
+	diffKeys(newKeys) {
+		return newKeys.u !== this.values.keys.u ||
+			newKeys.d !== this.values.keys.d ||
+			newKeys.l !== this.values.keys.l ||
+			newKeys.r !== this.values.keys.r;
+	}
 
-  set angle(newAngle) {
-    if (this.diffAngle(newAngle)) {
-      this.values.angle = newAngle;
-      this.app.sendAngleChange();
-    }
-  }
+	get angle() {
+		return this.values.angle;
+	}
 
-  diffAngle(newAngle) {
-    return Math.abs(newAngle - this.values.angle) > .15;
-  }
+	set angle(newAngle) {
+		if (this.diffAngle(newAngle)) {
+			this.values.angle = newAngle;
+			this.app.sendAngleChange();
+		}
+	}
 
-  handleClick () {
-		// if (!this.fireable)
-		// 	return;
+	diffAngle(newAngle) {
+		return Math.abs(newAngle - this.values.angle) > .15;
+	}
+
+	handleClick() {
+		if (!this.fireable)
+			return;
 		this.fireable = false;
-		// this.reload();
+		this.reload();
 
 		let x = this.app.self.body.x + this.app.self.body.halfWidth;
-    let y = this.app.self.body.y + this.app.self.body.halfHeight;
-    this.app.sendFire({x,y});
-  }
-  
-  input(self, game, keys) {
-    if (!self) return;
+		let y = this.app.self.body.y + this.app.self.body.halfHeight;
+		this.app.sendFire({ x, y });
+	}
+
+	reload() {
+		setTimeout(() => { this.fireable = true; }, LASER_PROPS.interval);
+	}
+
+	input(self, game, keys) {
+		if (!self) return;
 
 		this.keys = keys;
 
 		const dx = (self.body.x + self.body.halfWidth) - game.camera.x - this.mouse.x;
 		const dy = (self.body.y + self.body.halfHeight) - game.camera.y - this.mouse.y;
-    this.angle = Math.atan2(dy, dx) - Math.PI / 4;
-    console.log(this.angle);
-  }
+		this.angle = Math.atan2(dy, dx) - Math.PI / 4;
+	}
 };
 
 export { Player };

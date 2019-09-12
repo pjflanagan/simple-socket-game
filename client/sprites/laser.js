@@ -8,6 +8,7 @@ var Laser = function (app, game, data) {
 	Phaser.Sprite.call(this, game, data.p.x, data.p.y, image);
 	this.app = app;
 	this.userID = data.i;
+	this.team = data.t;
 
 	this.anchor.set(.5, .5);
 	this.lifespan = LASER_PROPS.lifespan;

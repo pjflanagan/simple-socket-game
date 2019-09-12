@@ -44,7 +44,7 @@ App.Main.prototype = {
 
 		this.game.load.image('bg', '/client/assets/img_bg.png');
 
-    this.player = new Player(this);
+		this.player = new Player(this);
 	},
 
 	create: function () {
@@ -74,12 +74,12 @@ App.Main.prototype = {
 			u: this.keyUp.isDown,
 			d: this.keyDown.isDown
 		});
+		this.game.physics.arcade.overlap(this.LaserGroup, this.self, this.laserHit, null, this);
 	},
 
 	// socket functions
 
 	addSelf: function (data) {
-    console.log(data);
 		this.self = new Ship(this, this.game, data);
 		this.ShipGroup.add(this.self);
 		this.game.camera.follow(this.self);
@@ -142,10 +142,10 @@ App.Main.prototype = {
 		})
 	},
 
-	sendFire: function ({x,y}) {
-    this.socket.sendFire({
-      i: this.self.state.i,
-      t: this.self.team,
+	sendFire: function ({ x, y }) {
+		this.socket.sendFire({
+			i: this.self.state.i,
+			t: this.self.team,
 			p: {
 				x,
 				y,
@@ -156,6 +156,12 @@ App.Main.prototype = {
 
 	recvFire: function (data) {
 		this.LaserGroup.add(new Laser(this, this.game, data));
+	},
+
+	laserHit: function (laser, self) {
+		if (laser.team !== self.team) {
+			console.log('I\'m hit!');
+		}
 	}
 
 };
