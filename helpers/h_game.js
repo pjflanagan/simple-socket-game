@@ -6,7 +6,8 @@ export const GAME = {
 	MAX_SHIPS: 30,
 	WORLD: {
 		WIDTH: 2000,
-		HEIGHT: 2000
+    HEIGHT: 1200,
+    SAFE_ZONE_WIDTH: 200
 	},
 	ASTEROIDS: 20,
 	TEAM: {
@@ -16,23 +17,26 @@ export const GAME = {
 };
 
 export const LASER_PROPS = {
-  speed: 360,
-	reloadInterval: 1200,
-  lifespan: 1000,
-  rounds: 3
+  SPEED: 360,
+	RELOAD_INTERVAL: 1200,
+  LIFESPAN: 1000,
+  ROUNDS: 3
 };
 
 export const SHIP_PROPS = {
-	velocity: 240,
+	VELOCITY: 240,
 };
 
 export const defaultUserState = function (userID, team) {
+  const randomSafeZoneWidth = Math.floor(Math.random() * GAME.WORLD.SAFE_ZONE_WIDTH);
+  const x = (team === GAME.TEAM.RED) ? randomSafeZoneWidth : GAME.WORLD.WIDTH + randomSafeZoneWidth;
+
 	return {
 		i: userID, // id
     t: team,
     s: 0,
 		p: { // position
-			x: Math.floor(Math.random() * GAME.WORLD.WIDTH),
+			x,
 			y: Math.floor(Math.random() * GAME.WORLD.HEIGHT),
 			a: Math.random() * 180 // angle
 		},

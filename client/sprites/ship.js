@@ -1,4 +1,5 @@
 import { SHIP_PROPS, GAME } from '/helpers/index.js';
+import { explosion } from './explosion.js';
 
 Math.radians = function (degrees) {
 	return degrees * Math.PI / 180; // Converts from degrees to radians
@@ -45,7 +46,7 @@ const Ship = function (app, game, data) {
 	// enable physics on the Ship
 	this.game.physics.enable(this, Phaser.Physics.ARCADE);
 	this.body.collideWorldBounds = true;
-	this.body.maxVelocity = SHIP_PROPS.velocity;
+	this.body.maxVelocity = SHIP_PROPS.VELOCITY;
 
 };
 
@@ -58,12 +59,12 @@ Ship.prototype.update = function () {
 
 	if (this.keys.l !== this.keys.r) {
 		x = (this.keys.l) ? 'W' : 'E';
-		velocity = SHIP_PROPS.velocity;
+		velocity = SHIP_PROPS.VELOCITY;
 	}
 
 	if (this.keys.u !== this.keys.d) {
 		y = (this.keys.u) ? 'N' : 'S';
-		velocity = SHIP_PROPS.velocity;
+		velocity = SHIP_PROPS.VELOCITY;
 	}
 
 	this.game.physics.arcade.velocityFromAngle(directionAngles[y + x], velocity, this.body.velocity);
@@ -72,6 +73,12 @@ Ship.prototype.update = function () {
 Ship.prototype.death = function () {
   // animate
   console.log('DEATH');
+  explosion(this.game, {
+    p: {
+			x: this.x,
+      y: this.y,
+    }
+  })
 	this.kill();
 };
 

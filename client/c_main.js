@@ -159,7 +159,11 @@ App.Main.prototype = {
 				x,
 				y,
 				a: this.player.angle - 3 * Math.PI / 4
-			}
+      },
+      // v: {
+      //   x: this.self.body.velocity.x,
+      //   y: this.self.body.velocity.y 
+      // }
 		});
 	},
 

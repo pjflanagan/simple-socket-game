@@ -42,9 +42,9 @@ class ServerSocket {
 		this.death(socket);
 	}
 
-	// death
+	// death TODO: determine better naming here, remove hit, also remove, from game
 	death(socket) {
-		console.log('death:', socket.id);
+    console.log('death:', socket.id);
 		this.io.emit(EVENTS.death, socket.id);
 	}
 

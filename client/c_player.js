@@ -52,7 +52,7 @@ class Player {
 	}
 
 	handleClick() {
-		if (this.rounds === 0)
+		if (this.hasBeenHit || this.rounds === 0)
 			return;
 		this.rounds -= 1;
 		this.reload();
@@ -64,7 +64,7 @@ class Player {
 
 	reload() {
     if (this.rounds === 0) {
-      setTimeout(() => { this.rounds = LASER_PROPS.rounds; }, LASER_PROPS.reloadInterval);
+      setTimeout(() => { this.rounds = LASER_PROPS.ROUNDS; }, LASER_PROPS.RELOAD_INTERVAL);
     }
 	}
 

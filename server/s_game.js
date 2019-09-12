@@ -14,7 +14,7 @@ class Game {
 	}
 
 	disconnect(socket) {
-    delete this.users[socket.id]
+    delete this.users[socket.id];
 		this.server.sendDisconnect(socket);
 	}
 
