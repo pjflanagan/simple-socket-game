@@ -17,7 +17,8 @@ class ServerSocket {
 			socket.on(EVENTS.keyChange, (data) => self.keyChange(data));
 			socket.on(EVENTS.angleChange, (data) => self.angleChange(data));
 			socket.on(EVENTS.stateUpdate, (data) => self.stateUpdate(socket, data));
-			socket.on(EVENTS.fire, (data) => self.fire(data));
+      socket.on(EVENTS.fire, (data) => self.fire(data));
+      socket.on(EVENTS.hit, (data) => self.hit(data));
 		});
   }
 
@@ -72,6 +73,10 @@ class ServerSocket {
 		this.io.emit(EVENTS.fire, data);
 	}
 
+  // hit
+  hit(data) {
+    this.io.emit(EVENTS.hit, data);
+  }
 
 }
 

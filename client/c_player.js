@@ -1,15 +1,16 @@
-import { LASER_PROPS } from '/helpers/index.js';
+import { SHIP_PROPS, LASER_PROPS } from '/helpers/index.js';
 
 class Player {
 	constructor(app) {
 		this.app = app;
 
-		this.fireable = true;
+		this.rounds = 3;
 		this.mouse = { x: 0, y: 0 };
 		this.values = {
 			keys: { u: false, d: false, l: false, r: false },
 			angle: 0
-		};
+    };
+    this.hasBeenHit = false;
 
 		window.addEventListener("mousemove", (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
 		window.addEventListener("mousedown", (e) => { this.handleClick(); })
@@ -20,6 +21,7 @@ class Player {
 	}
 
 	set keys(newKeys) {
+    if (this.hasBeenHit) return;
 		if (this.diffKeys(newKeys)) {
 			this.values.keys = newKeys;
 			this.app.sendKeyChange();
@@ -38,6 +40,7 @@ class Player {
 	}
 
 	set angle(newAngle) {
+    if (this.hasBeenHit) return;
 		if (this.diffAngle(newAngle)) {
 			this.values.angle = newAngle;
 			this.app.sendAngleChange();
@@ -49,9 +52,9 @@ class Player {
 	}
 
 	handleClick() {
-		if (!this.fireable)
+		if (this.rounds === 0)
 			return;
-		this.fireable = false;
+		this.rounds -= 1;
 		this.reload();
 
 		let x = this.app.self.body.x + this.app.self.body.halfWidth;
@@ -60,7 +63,9 @@ class Player {
 	}
 
 	reload() {
-		setTimeout(() => { this.fireable = true; }, LASER_PROPS.interval);
+    if (this.rounds === 0) {
+      setTimeout(() => { this.rounds = LASER_PROPS.rounds; }, LASER_PROPS.reloadInterval);
+    }
 	}
 
 	input(self, game, keys) {

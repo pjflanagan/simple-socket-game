@@ -44,7 +44,7 @@ App.Main.prototype = {
 
 		this.game.load.image('bg', '/client/assets/img_bg.png');
 
-		this.player = new Player(this);
+    this.player = new Player(this);
 	},
 
 	create: function () {
@@ -77,55 +77,64 @@ App.Main.prototype = {
 		this.game.physics.arcade.overlap(this.LaserGroup, this.self, this.laserHit, null, this);
 	},
 
-	// socket functions
+	// GAME FUNCTIONS
 
-	addSelf: function (data) {
+  laserHit: function (laser, self) {
+		if (!this.player.hasBeenHit && laser.team !== self.team) {
+      this.player.hasBeenHit = true;
+      this.sendLaserHit(laser);
+		}
+	},
+
+  // SOCKET FUNCTIONS
+
+  recvAddSelf: function (data) {
 		this.self = new Ship(this, this.game, data);
 		this.ShipGroup.add(this.self);
 		this.game.camera.follow(this.self);
 	},
 
-	shareSelf: function () {
-		return this.self.shareSelf();
-	},
-
-	addUser: function (data) {
+	recvAddUser: function (data) {
 		this.ShipGroup.add(new Ship(this, this.game, data));
 	},
 
-	removeUser: function (userID) {
+	recvRemoveUser: function (userID) {
 		this.ShipGroup.forEach((ship) => {
-			if (ship.state.i === userID)
+			if (ship.userID === userID)
 				ship.death();
 		});
+  },
+
+  sendShareSelf: function () {
+		return this.self.shareSelf();
 	},
 
 	sendKeyChange: function () {
 		this.socket.sendKeyChange({
-			i: this.self.state.i,
+			i: this.self.userID,
 			k: this.player.keys
 		});
 	},
 
 	recvKeyChange: function (data) {
 		this.ShipGroup.forEach(function (ship) {
-			if (ship.state.i === data.i) {
-				ship.recvKeyChange(data.k);
+			if (ship.userID === data.i) {
+				ship.keyChange(data.k);
 			}
 		});
 	},
 
 	sendAngleChange: function () {
 		this.socket.sendAngleChange({
-			i: this.self.state.i,
+			i: this.self.userID,
 			a: this.player.angle
 		})
 	},
 
 	recvAngleChange: function (data) {
 		this.ShipGroup.forEach(function (ship) {
-			if (ship.state.i === data.i) {
-				ship.recvAngleChange(data.a);
+			if (ship.userID === data.i) {
+				ship.angleChange(data.a);
 			}
 		});
 	},
@@ -134,17 +143,17 @@ App.Main.prototype = {
 	// 	this.socket.sendStateUpdate(this.self.getState());
 	// },
 
-	recvStateUpdate: function (data) {
-		this.ShipGroup.forEach(function (ship) {
-			if (ship.state.i === data.i) {
-				ship.recvStateUpdate(data);
-			}
-		})
-	},
+	// recvStateUpdate: function (data) {
+	// 	this.ShipGroup.forEach(function (ship) {
+	// 		if (ship.userID === data.i) {
+	// 			ship.recvStateUpdate(data);
+	// 		}
+	// 	})
+	// },
 
 	sendFire: function ({ x, y }) {
 		this.socket.sendFire({
-			i: this.self.state.i,
+			i: this.self.userID,
 			t: this.self.team,
 			p: {
 				x,
@@ -156,12 +165,26 @@ App.Main.prototype = {
 
 	recvFire: function (data) {
 		this.LaserGroup.add(new Laser(this, this.game, data));
-	},
+  },
+  
+  sendLaserHit: function(laser) {
+    this.socket.sendLaserHit({
+      i: this.self.userID,
+      l: {
+        i: laser.userID,
+        t: laser.team
+      }
+    })
+  },
 
-	laserHit: function (laser, self) {
-		if (laser.team !== self.team) {
-			console.log('I\'m hit!');
-		}
-	}
+  recvLaserHit: function(data) {
+    this.ShipGroup.forEach(function (ship) {
+			if (ship.userID === data.i) {
+				ship.death();
+			} else if (ship.userID == data.l.i) {
+        ship.rewardPoints();
+      }
+    });
+  }
 
 };

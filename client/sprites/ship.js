@@ -25,12 +25,13 @@ const Ship = function (app, game, data) {
 	this.app = app;
 	this.game = game;
 
-	this.state = data;
+  this.userID = data.i;
+  this.keys = data.k;
   this.team = data.t;
-	this.fireable = true;
+	this.angle = data.p.a;
+  this.score = 0;
 
 	this.anchor.set(0.5, 0.5);
-	this.angle = data.p.a;
 
   if(this.team === GAME.TEAM.RED) {
     this.animations.add('red', [0]);
@@ -46,11 +47,6 @@ const Ship = function (app, game, data) {
 	this.body.collideWorldBounds = true;
 	this.body.maxVelocity = SHIP_PROPS.velocity;
 
-	// let self = this;
-	// this.interval = setInterval(() => {
-	// 	self.app.sendStateUpdate();
-	// }, 500);
-
 };
 
 Ship.prototype = Object.create(Phaser.Sprite.prototype);
@@ -60,29 +56,30 @@ Ship.prototype.update = function () {
 	let velocity = 0;
 	let x = '0', y = '0';
 
-	if (this.state.k.l !== this.state.k.r) {
-		x = (this.state.k.l) ? 'W' : 'E';
+	if (this.keys.l !== this.keys.r) {
+		x = (this.keys.l) ? 'W' : 'E';
 		velocity = SHIP_PROPS.velocity;
 	}
 
-	if (this.state.k.u !== this.state.k.d) {
-		y = (this.state.k.u) ? 'N' : 'S';
+	if (this.keys.u !== this.keys.d) {
+		y = (this.keys.u) ? 'N' : 'S';
 		velocity = SHIP_PROPS.velocity;
 	}
 
-	this.rotation = this.state.p.a;
 	this.game.physics.arcade.velocityFromAngle(directionAngles[y + x], velocity, this.body.velocity);
 }
 
 Ship.prototype.death = function () {
-	// animate
+  // animate
+  console.log('DEATH');
 	this.kill();
 };
 
 Ship.prototype.shareSelf = function () {
 	return {
-    i: this.state.i,
+    i: this.userID,
     t: this.team,
+    s: this.score,
 		p: {
 			x: this.x,
 			y: this.y,
@@ -93,25 +90,20 @@ Ship.prototype.shareSelf = function () {
 			y: this.body.velocity.y,
 		},
 		h: 100, // health this.health (Health is a Phaser property)
-		k: this.state.k
+		k: this.keys
 	};
 }
 
-Ship.prototype.recvKeyChange = function (keys) {
-	this.state.k = keys;
+Ship.prototype.keyChange = function (keys) {
+	this.keys = keys;
 }
 
-Ship.prototype.recvAngleChange = function (angle) {
-	this.state.p.a = angle
+Ship.prototype.angleChange = function (angle) {
+	this.rotation = angle;
 }
 
-// Ship.prototype.reload = function () {
-// 	var self = this;
-// 	this.interval = setTimeout(function () {
-// 		self.fireable = true;
-// 	}, laserProps.interval);
-
-// }
-
+Ship.prototype.rewardPoints = function(){
+  this.score += 1;
+}
 
 export { Ship };

@@ -11,7 +11,8 @@ const gameEvents = [
 	'death',
 	'keyChange',
 	'angleChange',
-	'fire',
+  'fire',
+  'hit'
 ];
 
 const EVENTS = {

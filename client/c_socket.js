@@ -18,26 +18,27 @@ class ClientSocket {
 		this.socket.on(EVENTS.angleChange, (data) => self.recvAngleChange(data));
 		this.socket.on(EVENTS.stateUpdate, (data) => self.recvStateUpdate(data));
 		this.socket.on(EVENTS.fire, (data) => self.recvFire(data));
+		this.socket.on(EVENTS.hit, (data) => self.recvLaserHit(data));
 	}
 
 	recvAddSelf(data) {
-		this.app.addSelf(data);
+		this.app.recvAddSelf(data);
 	}
 
 	recvAddUser(data) {
-		this.app.addUser(data);
+		this.app.recvAddUser(data);
 	}
 
 	recvRemoveUser(userID) {
 		// TODO: right now data is just the user id but
 		// it should also have who killed them to keep score
-		this.app.removeUser(userID);
+		this.app.recvRemoveUser(userID);
 	}
 
 	sendShareSelf(data) {
 		this.socket.emit(EVENTS.shareSelf, {
 			to: data.i,
-			user: this.app.shareSelf()
+			user: this.app.sendShareSelf()
 		});
 	}
 
@@ -71,7 +72,15 @@ class ClientSocket {
 
 	recvFire(data) {
 		this.app.recvFire(data);
-	}
+  }
+  
+  sendLaserHit(data) {
+    this.socket.emit(EVENTS.hit, data);
+  }
+
+  recvLaserHit(data) {
+    this.app.recvLaserHit(data);
+  }
 
 }
 

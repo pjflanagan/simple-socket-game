@@ -16,9 +16,10 @@ export const GAME = {
 };
 
 export const LASER_PROPS = {
-	speed: 360,
-	interval: 420,
-	lifespan: 1000,
+  speed: 360,
+	reloadInterval: 1200,
+  lifespan: 1000,
+  rounds: 3
 };
 
 export const SHIP_PROPS = {
@@ -28,7 +29,8 @@ export const SHIP_PROPS = {
 export const defaultUserState = function (userID, team) {
 	return {
 		i: userID, // id
-		t: team,
+    t: team,
+    s: 0,
 		p: { // position
 			x: Math.floor(Math.random() * GAME.WORLD.WIDTH),
 			y: Math.floor(Math.random() * GAME.WORLD.HEIGHT),
