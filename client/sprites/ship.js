@@ -27,6 +27,7 @@ const Ship = function (app, game, data) {
 	this.game = game;
 
   this.userID = data.i;
+  this.name = data.n;
   this.keys = data.k;
   this.team = data.t;
 	this.angle = data.p.a;
@@ -71,8 +72,6 @@ Ship.prototype.update = function () {
 }
 
 Ship.prototype.death = function () {
-  // animate
-  console.log('DEATH');
   explosion(this.game, {
     p: {
 			x: this.x,
@@ -82,9 +81,10 @@ Ship.prototype.death = function () {
 	this.kill();
 };
 
-Ship.prototype.shareSelf = function () {
+Ship.prototype.getState = function () {
 	return {
     i: this.userID,
+    n: this.name,
     t: this.team,
     s: this.score,
 		p: {

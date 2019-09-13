@@ -40,6 +40,11 @@ App.Main.prototype = {
 			'imgBlueLaser',
 			'/client/assets/img_blue_laser.png',
 			16, 16, 3
+    );
+    this.game.load.spritesheet(
+			'imgDebris',
+			'/client/assets/img_debris.png',
+			16, 16, 3
 		);
 
 		this.game.load.image('bg', '/client/assets/img_bg.png');
@@ -51,9 +56,12 @@ App.Main.prototype = {
 		this.game.world.setBounds(0, 0, GAME.WORLD.WIDTH, GAME.WORLD.HEIGHT);
 		this.game.add.tileSprite(0, 0, GAME.WORLD.WIDTH, GAME.WORLD.HEIGHT, 'bg');
 		this.game.stage.disableVisibilityChange = true; // keep game running if it loses the focus
-		this.game.physics.startSystem(Phaser.Physics.ARCADE); // start the Phaser arcade physics engine
+    this.game.physics.startSystem(Phaser.Physics.ARCADE); // start the Phaser arcade physics engine
+    
+    this.drawZones();
 
-		this.LaserGroup = this.game.add.group();
+    this.LaserGroup = this.game.add.group();
+    this.PlayerLaserGroup = this.game.add.group();
 		this.ShipGroup = this.game.add.group();
 
 		this.socket = new ClientSocket(this);
@@ -74,16 +82,36 @@ App.Main.prototype = {
 			u: this.keyUp.isDown,
 			d: this.keyDown.isDown
 		});
-		this.game.physics.arcade.overlap(this.LaserGroup, this.self, this.laserHit, null, this);
-	},
+		this.game.physics.arcade.overlap(this.PlayerLaserGroup, this.ShipGroup, this.laserHit, null, this);
+  },
+  
+  // GRAPHICS
+
+  drawZones: function() {
+    const graphics = this.game.add.graphics(0, 0);
+    graphics.beginFill(0xFF0000);
+    graphics.alpha = 0.2;
+    graphics.drawRect(0, 0, GAME.WORLD.SAFE_ZONE_WIDTH, GAME.WORLD.HEIGHT);
+    graphics.endFill();
+    this.RedZone = this.game.add.sprite(0, 0, graphics.generateTexture());
+    this.RedZone.alpha = 0.2;
+    graphics.beginFill(0x0000FF);
+    graphics.alpha = 0.2;
+    graphics.drawRect(GAME.WORLD.WIDTH - GAME.WORLD.SAFE_ZONE_WIDTH, 0, GAME.WORLD.SAFE_ZONE_WIDTH, GAME.WORLD.HEIGHT);
+    graphics.endFill();
+    this.BlueZone = this.game.add.sprite(0, 0, graphics.generateTexture());
+    this.BlueZone.alpha = 0.2;
+  },
 
 	// GAME FUNCTIONS
 
-  laserHit: function (laser, self) {
-		if (!this.player.hasBeenHit && laser.team !== self.team) {
-      this.player.hasBeenHit = true;
-      this.sendLaserHit(laser);
-		}
+  laserHit: function (laser, ship) {
+		if (laser.team !== ship.team) {
+      this.sendLaserHit(laser, ship);
+    } 
+    // else if (ship.userID === this.self.userID && laser.team !== this.self.team){
+    //   this.player.hasBeenHit = true;
+    // }
 	},
 
   // SOCKET FUNCTIONS
@@ -105,9 +133,9 @@ App.Main.prototype = {
 		});
   },
 
-  sendShareSelf: function () {
-		return this.self.shareSelf();
-	},
+  getUserState: function () {
+		return this.self.getState();
+  },
 
 	sendKeyChange: function () {
 		this.socket.sendKeyChange({
@@ -117,7 +145,7 @@ App.Main.prototype = {
 	},
 
 	recvKeyChange: function (data) {
-		this.ShipGroup.forEach(function (ship) {
+		this.ShipGroup.forEach((ship) => {
 			if (ship.userID === data.i) {
 				ship.keyChange(data.k);
 			}
@@ -132,7 +160,7 @@ App.Main.prototype = {
 	},
 
 	recvAngleChange: function (data) {
-		this.ShipGroup.forEach(function (ship) {
+		this.ShipGroup.forEach((ship) => {
 			if (ship.userID === data.i) {
 				ship.angleChange(data.a);
 			}
@@ -168,12 +196,17 @@ App.Main.prototype = {
 	},
 
 	recvFire: function (data) {
-		this.LaserGroup.add(new Laser(this, this.game, data));
+    if(data.i === this.self.userID) {
+      this.PlayerLaserGroup.add(new Laser(this, this.game, data));
+    } else {
+      this.LaserGroup.add(new Laser(this, this.game, data));
+    }
   },
   
-  sendLaserHit: function(laser) {
+  sendLaserHit: function(laser, ship) {
     this.socket.sendLaserHit({
-      i: this.self.userID,
+      i: ship.userID,
+      t: ship.team,
       l: {
         i: laser.userID,
         t: laser.team
@@ -182,13 +215,22 @@ App.Main.prototype = {
   },
 
   recvLaserHit: function(data) {
+    const playerUserID = this.self.userID;
+    const leave = () => { this.leave(this.self.score); }
     this.ShipGroup.forEach(function (ship) {
 			if (ship.userID === data.i) {
+        if(playerUserID === data.i) {
+          leave();
+        }
 				ship.death();
 			} else if (ship.userID == data.l.i) {
         ship.rewardPoints();
       }
     });
+  },
+
+  leave(score) {
+    $(location).attr('href', `/?name=name&score=${score}`);
   }
 
 };

@@ -15,8 +15,13 @@ class Game {
 
 	disconnect(socket) {
     delete this.users[socket.id];
-		this.server.sendDisconnect(socket);
-	}
+		this.server.sendRemoveUser(socket);
+  }
+  
+  hit(data) {
+    delete this.users[data.i];
+    this.server.sendHit(data);
+  }
 
 	// updateState(data) {
 	// 	this.userState[data.id] = data;

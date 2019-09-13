@@ -18,7 +18,7 @@ class ServerSocket {
 			socket.on(EVENTS.angleChange, (data) => self.angleChange(data));
 			socket.on(EVENTS.stateUpdate, (data) => self.stateUpdate(socket, data));
       socket.on(EVENTS.fire, (data) => self.fire(data));
-      socket.on(EVENTS.hit, (data) => self.hit(data));
+      socket.on(EVENTS.hit, (data) => self.recvHit(data));
 		});
   }
 
@@ -38,14 +38,16 @@ class ServerSocket {
 		this.game.disconnect(socket);
 	}
 
-	sendDisconnect(socket) {
-		this.death(socket);
-	}
+	sendRemoveUser(socket) {
+		this.io.emit(EVENTS.removeUser, socket.id);
+  }
+  
+  recvHit(data) {
+    this.game.hit(data);
+  }
 
-	// death TODO: determine better naming here, remove hit, also remove, from game
-	death(socket) {
-    console.log('death:', socket.id);
-		this.io.emit(EVENTS.death, socket.id);
+	sendHit(data) {
+    this.io.emit(EVENTS.hit, data);
 	}
 
 	// share self
@@ -72,11 +74,6 @@ class ServerSocket {
 	fire(data) {
 		this.io.emit(EVENTS.fire, data);
 	}
-
-  // hit
-  hit(data) {
-    this.io.emit(EVENTS.hit, data);
-  }
 
 }
 

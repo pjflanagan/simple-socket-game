@@ -10,7 +10,7 @@ const EXPLOSION_PROPS = {
  * @class Debris @extends Phaser.Sprite
  */
 const Debris = function (game, data) {
-	Phaser.Sprite.call(this, game, data.p.x, data.p.y, 'imgRedLaser');
+	Phaser.Sprite.call(this, game, data.p.x, data.p.y, 'imgDebris');
 
 	this.anchor.set(.5, .5);
 	this.lifespan = EXPLOSION_PROPS.lifespan();
@@ -25,14 +25,12 @@ const Debris = function (game, data) {
   const speed = EXPLOSION_PROPS.speed();
   const angle = EXPLOSION_PROPS.angle();
 	game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
-  console.log('DEBRIS');
 };
 
 Debris.prototype = Object.create(Phaser.Sprite.prototype);
 Debris.prototype.constructor = Debris;
 
 export const explosion = function(game, data) {
-  console.log(data);
   const DebrisGroup = game.add.group();
   const count = EXPLOSION_PROPS.count();
   for(let i = 0; i < count; ++i) {

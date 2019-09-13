@@ -10,7 +10,6 @@ class Player {
 			keys: { u: false, d: false, l: false, r: false },
 			angle: 0
     };
-    this.hasBeenHit = false;
 
 		window.addEventListener("mousemove", (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
 		window.addEventListener("mousedown", (e) => { this.handleClick(); })
@@ -21,7 +20,6 @@ class Player {
 	}
 
 	set keys(newKeys) {
-    if (this.hasBeenHit) return;
 		if (this.diffKeys(newKeys)) {
 			this.values.keys = newKeys;
 			this.app.sendKeyChange();
@@ -40,7 +38,6 @@ class Player {
 	}
 
 	set angle(newAngle) {
-    if (this.hasBeenHit) return;
 		if (this.diffAngle(newAngle)) {
 			this.values.angle = newAngle;
 			this.app.sendAngleChange();
@@ -52,7 +49,7 @@ class Player {
 	}
 
 	handleClick() {
-		if (this.hasBeenHit || this.rounds === 0)
+		if (this.rounds === 0)
 			return;
 		this.rounds -= 1;
 		this.reload();
