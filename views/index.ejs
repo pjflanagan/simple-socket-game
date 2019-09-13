@@ -2,35 +2,94 @@
 <html>
 
 <head>
-	<% include templates/head.ejs %>
+  <% include templates/head.ejs %>
+  <style>
+      div.input-holder {
+        width: 70%;
+        margin-left: 15%;
+        height: 220px;
+        top: 50%;
+        position: absolute;
+        margin-top: -110px;
+        overflow: hidden;
+      }
+    
+      p.prompt {
+        color: #FFF;
+      }
+
+      div.text {
+        display: flex;
+      }
+    
+      p.name {
+        margin: 0;
+        background: none;
+        border: none;
+        color: #0F0;
+        font-size: 120px;
+        font-family: 'Roboto Mono',
+          monospace;
+      }
+
+      div.blinker {
+        height: 160px;
+        width: 70px;
+        background: #0f0;
+        animation: blink 1.2s infinite;
+      }
+
+      @keyframes blink {
+          0%{   background: #0f0f; }
+          50%{  background: #0f0f; }
+          51%{  background: #0000; }
+          99%{  background: #0000; }
+          100%{ background: #0f0f; }
+      }
+    </style>
 </head>
 
 <body>
 	<div class="input-holder">
-		<p class="prompt">Type name and press enter...</p>
-		<p class="name"></p>
+    <p class="prompt"></p>
+    <div class="text">
+        <p class="name"></p>
+        <div class="blinker"></div>
+    </div>
 	</div>
 </body>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="/client/packages/gup.js"></script>
 <script>
-	let name = ''
+  $(function(){
+    // score
+    const score = gup('score');
+    const scoreText = (!!score) ? `Your score is ${score}. ` : '';
+    $('p.prompt').text(`${scoreText}Type name and press enter...`);
 
-	$(document).on('keypress', function (e) {
-		var letter = String.fromCharCode(e.keyCode);
-		if (/[a-zA-Z0-9-_ ]/.test(letter)) {
-			name += letter;
-			$('p.name').text(name);
-		};
-	});
+    // name
+    let name = gup('name');
+    $('p.name').text(name);
 
-	$(document).on('keydown', function (e) {
-		if ((e.keyCode === 8 || e.key === 'Backspace') && name.length > 0) {
-			name = name.substr(0, name.length - 1);
-			$('p.name').text(name)
-		} else if (e.which === 13) {
-			$(location).attr('href', `/game?name=${name}`);
-		}
-	});
+    $(document).on('keypress', function (e) {
+      var letter = String.fromCharCode(e.keyCode);
+      if (/[a-zA-Z0-9-_ ]/.test(letter)) {
+        name += letter;
+        $('p.name').text(name);
+      };
+    });
+
+    $(document).on('keydown', function (e) {
+      if ((e.keyCode === 8 || e.key === 'Backspace') && name.length > 0) {
+        name = name.substr(0, name.length - 1);
+        $('p.name').text(name)
+      } else if (e.which === 13) {
+        $(location).attr('href', `/game?name=${name}`);
+      }
+    });
+  })
+
+
 </script>
 
 </html>
