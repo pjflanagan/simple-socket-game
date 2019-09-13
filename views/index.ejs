@@ -68,7 +68,7 @@
     $('p.prompt').text(`${scoreText}Type name and press enter...`);
 
     // name
-    let name = gup('name');
+    let name = gup('name') || '';
     $('p.name').text(name);
 
     $(document).on('keypress', function (e) {

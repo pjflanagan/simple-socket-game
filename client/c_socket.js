@@ -2,7 +2,12 @@ import { EVENTS } from '/helpers/index.js';
 
 class ClientSocket {
 	constructor(app) {
-		this.socket = io();
+    const name = gup('name') || '';
+		this.socket = io({
+      query: {
+        name
+      }
+    });
 		this.app = app;
 		const self = this;
 

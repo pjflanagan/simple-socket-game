@@ -21,7 +21,7 @@ const directionAngles = {
 /**
  * @class Ship @extends Phaser.Sprite
  */
-const Ship = function (app, game, data) {
+const Ship = function (app, game, data, isSelf=false) {
 	Phaser.Sprite.call(this, game, data.p.x, data.p.y, 'imgShip');
 	this.app = app;
 	this.game = game;
@@ -32,6 +32,7 @@ const Ship = function (app, game, data) {
   this.team = data.t;
 	this.angle = data.p.a;
   this.score = 0;
+  this.isSelf = isSelf;
 
 	this.anchor.set(0.5, 0.5);
 
@@ -47,8 +48,19 @@ const Ship = function (app, game, data) {
 	// enable physics on the Ship
 	this.game.physics.enable(this, Phaser.Physics.ARCADE);
 	this.body.collideWorldBounds = true;
-	this.body.maxVelocity = SHIP_PROPS.VELOCITY;
-
+  this.body.maxVelocity = SHIP_PROPS.VELOCITY;
+  
+  if (this.shouldDisplayText()) {
+    const style = {
+      font: "12px Roboto Mono",
+      fill: "#FFF",
+      wordWrap: true,
+      wordWrapWidth: this.width * 1.4, 
+      align: "center",
+    };
+    this.text = game.add.text(0, 0, this.name, style);
+    this.text.anchor.set(0.5);
+  }
 };
 
 Ship.prototype = Object.create(Phaser.Sprite.prototype);
@@ -69,9 +81,15 @@ Ship.prototype.update = function () {
 	}
 
 	this.game.physics.arcade.velocityFromAngle(directionAngles[y + x], velocity, this.body.velocity);
+  
+  if(this.shouldDisplayText()){
+    this.text.x = Math.floor(this.x);
+    this.text.y = Math.floor(this.y + this.height);
+  }
 }
 
 Ship.prototype.death = function () {
+  // TODO: this.text.kill();
   explosion(this.game, {
     p: {
 			x: this.x,
@@ -111,6 +129,10 @@ Ship.prototype.angleChange = function (angle) {
 
 Ship.prototype.rewardPoints = function(){
   this.score += 1;
+}
+
+Ship.prototype.shouldDisplayText = function(){
+  return !this.isSelf && this.team === this.app.getTeam()
 }
 
 export { Ship };

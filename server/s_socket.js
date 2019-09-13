@@ -5,7 +5,7 @@ import { EVENTS } from '../helpers/index.js';
 
 class ServerSocket {
 	constructor(io) {
-		this.game = new Game(this);
+    this.game = new Game(this);
 
 		this.io = io;
 		this.io.on(EVENTS.connection, (socket) => {
@@ -24,8 +24,8 @@ class ServerSocket {
 
 	// connect
 	recvConnection(socket) {
-		console.log('connection:', socket.id);
-		this.game.connection(socket);
+		console.log('connection:', socket.id, socket.handshake.query.name);
+		this.game.connection(socket, socket.handshake.query.name);
 	}
 
 	sendConnection(socket, user) {

@@ -117,7 +117,7 @@ App.Main.prototype = {
   // SOCKET FUNCTIONS
 
   recvAddSelf: function (data) {
-		this.self = new Ship(this, this.game, data);
+		this.self = new Ship(this, this.game, data, true);
 		this.ShipGroup.add(this.self);
 		this.game.camera.follow(this.self);
 	},
@@ -216,7 +216,7 @@ App.Main.prototype = {
 
   recvLaserHit: function(data) {
     const playerUserID = this.self.userID;
-    const leave = () => { this.leave(this.self.score); }
+    const leave = () => { this.leave(this.self.name, this.self.score); }
     this.ShipGroup.forEach(function (ship) {
 			if (ship.userID === data.i) {
         if(playerUserID === data.i) {
@@ -229,8 +229,15 @@ App.Main.prototype = {
     });
   },
 
-  leave(score) {
-    $(location).attr('href', `/?name=name&score=${score}`);
+  leave(name, score) {
+    $(location).attr('href', `/?name=${name}&score=${score}`);
+  },
+
+  getTeam() {
+    if(this.self) {
+      return this.self.team;
+    }
+    return -1;
   }
 
 };

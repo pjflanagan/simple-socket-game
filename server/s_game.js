@@ -7,8 +7,8 @@ class Game {
     this.users = {};
 	}
 
-	connection(socket) {
-		const userState = defaultUserState(socket.id, this.selectTeam());
+	connection(socket, name) {
+		const userState = defaultUserState(socket.id, name, this.selectTeam());
     this.users[userState.i] = userState;
 		this.server.sendConnection(socket, userState);
 	}

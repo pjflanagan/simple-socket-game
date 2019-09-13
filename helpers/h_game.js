@@ -27,12 +27,13 @@ export const SHIP_PROPS = {
 	VELOCITY: 240,
 };
 
-export const defaultUserState = function (userID, team) {
+export const defaultUserState = function (userID, name, team) {
   const randomSafeZoneWidth = Math.floor(Math.random() * GAME.WORLD.SAFE_ZONE_WIDTH);
   const x = (team === GAME.TEAM.RED) ? randomSafeZoneWidth : GAME.WORLD.WIDTH + randomSafeZoneWidth;
 
 	return {
-		i: userID, // id
+    i: userID, // id
+    n: name,
     t: team,
     s: 0,
 		p: { // position
