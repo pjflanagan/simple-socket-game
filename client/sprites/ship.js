@@ -31,7 +31,7 @@ const Ship = function (app, game, data, isSelf=false) {
   this.keys = data.k;
   this.team = data.t;
 	this.angle = data.p.a;
-  this.score = 0;
+  this.score = data.s;
   this.isSelf = isSelf;
 
 	this.anchor.set(0.5, 0.5);
@@ -82,21 +82,24 @@ Ship.prototype.update = function () {
 
 	this.game.physics.arcade.velocityFromAngle(directionAngles[y + x], velocity, this.body.velocity);
   
-  if(this.shouldDisplayText()){
+  if(!!this.text){
     this.text.x = Math.floor(this.x);
     this.text.y = Math.floor(this.y + this.height);
   }
 }
 
 Ship.prototype.death = function () {
-  // TODO: this.text.kill();
+  if(!!this.text){
+    this.text.kill();
+  }
   explosion(this.game, {
     p: {
 			x: this.x,
       y: this.y,
     }
   })
-	this.kill();
+  this.kill();
+  this.app.removeShip(this);
 };
 
 Ship.prototype.getState = function () {
@@ -127,6 +130,7 @@ Ship.prototype.angleChange = function (angle) {
 	this.rotation = angle;
 }
 
+// TODO: points should be a sum of kill count, the time it's been alive for, and the asteroids taken
 Ship.prototype.rewardPoints = function(){
   this.score += 1;
 }

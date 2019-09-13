@@ -4,7 +4,7 @@ class Player {
 	constructor(app) {
 		this.app = app;
 
-		this.rounds = 3;
+		this.rounds = LASER_PROPS.ROUNDS;
 		this.mouse = { x: 0, y: 0 };
 		this.values = {
 			keys: { u: false, d: false, l: false, r: false },

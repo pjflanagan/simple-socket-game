@@ -2,6 +2,7 @@ import { ClientSocket } from './c_socket.js';
 import { Ship, Laser } from './sprites/index.js';
 import { GAME } from '../helpers/index.js';
 import { Player } from './c_player.js';
+import { HUD } from './c_hud.js';
 
 /**
  * @event onload
@@ -23,7 +24,7 @@ App.Main = function (game) { }
 
 App.Main.prototype = {
 
-	// overrides
+	// OVERRIDES -------------------------------------------------------------------------------------
 
 	preload: function () {
 		this.game.load.spritesheet(
@@ -50,6 +51,7 @@ App.Main.prototype = {
 		this.game.load.image('bg', '/client/assets/img_bg.png');
 
     this.player = new Player(this);
+    this.hud = new HUD(this);
 	},
 
 	create: function () {
@@ -85,7 +87,7 @@ App.Main.prototype = {
 		this.game.physics.arcade.overlap(this.PlayerLaserGroup, this.ShipGroup, this.laserHit, null, this);
   },
   
-  // GRAPHICS
+  // GRAPHICS --------------------------------------------------------------------------------------
 
   drawZones: function() {
     const graphics = this.game.add.graphics(0, 0);
@@ -103,39 +105,60 @@ App.Main.prototype = {
     this.BlueZone.alpha = 0.2;
   },
 
-	// GAME FUNCTIONS
+  // HELPERS ---------------------------------------------------------------------------------------
+
+  leave(name, score) {
+    $(location).attr('href', `/?name=${name}&score=${score}`);
+  },
+
+  getTeam() {
+    if(this.self) {
+      return this.self.team;
+    }
+    return -1;
+  },
+
+  updateHUD() {
+    this.hud.update();
+  },
 
   laserHit: function (laser, ship) {
-		if (laser.team !== ship.team) {
+    if (laser.team !== ship.team) {
       this.sendLaserHit(laser, ship);
-    } 
-    // else if (ship.userID === this.self.userID && laser.team !== this.self.team){
-    //   this.player.hasBeenHit = true;
-    // }
-	},
+    }
+  },
 
-  // SOCKET FUNCTIONS
+  removeShip(ship) {
+    this.ShipGroup.remove(ship);
+  },
+
+  // SOCKET ----------------------------------------------------------------------------------------
 
   recvAddSelf: function (data) {
 		this.self = new Ship(this, this.game, data, true);
 		this.ShipGroup.add(this.self);
-		this.game.camera.follow(this.self);
+    this.game.camera.follow(this.self);
+    this.updateHUD();
 	},
 
 	recvAddUser: function (data) {
-		this.ShipGroup.add(new Ship(this, this.game, data));
+    this.ShipGroup.add(new Ship(this, this.game, data));
+    this.updateHUD();
 	},
 
 	recvRemoveUser: function (userID) {
 		this.ShipGroup.forEach((ship) => {
 			if (ship.userID === userID)
 				ship.death();
-		});
+    });
+    this.updateHUD();
   },
 
   getUserState: function () {
 		return this.self.getState();
   },
+
+  // KEY
 
 	sendKeyChange: function () {
 		this.socket.sendKeyChange({
@@ -150,7 +173,9 @@ App.Main.prototype = {
 				ship.keyChange(data.k);
 			}
 		});
-	},
+  },
+  
+  // ANGLE
 
 	sendAngleChange: function () {
 		this.socket.sendAngleChange({
@@ -165,19 +190,9 @@ App.Main.prototype = {
 				ship.angleChange(data.a);
 			}
 		});
-	},
-
-	// sendStateUpdate: function () {
-	// 	this.socket.sendStateUpdate(this.self.getState());
-	// },
-
-	// recvStateUpdate: function (data) {
-	// 	this.ShipGroup.forEach(function (ship) {
-	// 		if (ship.userID === data.i) {
-	// 			ship.recvStateUpdate(data);
-	// 		}
-	// 	})
-	// },
+  },
+  
+  // FIRE
 
 	sendFire: function ({ x, y }) {
 		this.socket.sendFire({
@@ -202,6 +217,8 @@ App.Main.prototype = {
       this.LaserGroup.add(new Laser(this, this.game, data));
     }
   },
+
+  // HIT
   
   sendLaserHit: function(laser, ship) {
     this.socket.sendLaserHit({
@@ -227,17 +244,7 @@ App.Main.prototype = {
         ship.rewardPoints();
       }
     });
+    this.updateHUD();
   },
-
-  leave(name, score) {
-    $(location).attr('href', `/?name=${name}&score=${score}`);
-  },
-
-  getTeam() {
-    if(this.self) {
-      return this.self.team;
-    }
-    return -1;
-  }
 
 };

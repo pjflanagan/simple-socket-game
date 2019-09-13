@@ -28,7 +28,8 @@ Laser.prototype.constructor = Laser;
 
 Laser.prototype.hit = function () {
 	// sendHit
-	this.kill();
+  this.kill();
+  this.app.removeLaser(this);
 }
 
 export { Laser };
