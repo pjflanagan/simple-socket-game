@@ -2,56 +2,58 @@
 <html>
 
 <head>
-  <% include templates/head.ejs %>
-  
-  <style>
-    #hud {
-      margin: 0;
-      height: 100%;
-      width: 100%;
-      position: fixed;
-        pointer-events: none;
-    }
+	<% include templates/head.ejs %>
 
-    #hud #team-meters {
-      height: 40px;
-      margin: 12px 12px;
-      background: #63636322;
-      display: flex;
-      border-radius: 4px;
-    }
+	<style>
+		#hud {
+			margin: 0;
+			height: 100%;
+			width: 100%;
+			position: fixed;
+			pointer-events: none;
+		}
 
-    #hud #team-meters div {
-      color: #FFF;
-      padding: 8px 14px;
-      font-weight: bold;
-      width: 50%;
-      min-width: 5%;
-    }
-    #hud #team-meters #red {
-      background: #F009;
-      border-radius: 4px 0 0 4px;
-      text-align: right;
-    }
-    #hud #team-meters #blue {
-      background: #00F9;
-      text-align: left;
-      border-radius: 0 4px 4px 0;
-      margin-left: auto;
-    }
-  </style>
+		#hud #team-meters {
+			height: 40px;
+			margin: 12px 12px;
+			background: #63636322;
+			display: flex;
+			border-radius: 4px;
+		}
+
+		#hud #team-meters div {
+			color: #FFF;
+			padding: 8px 14px;
+			font-weight: bold;
+			width: 50%;
+			min-width: 5%;
+		}
+
+		#hud #team-meters #red {
+			background: #F009;
+			border-radius: 4px 0 0 4px;
+			text-align: right;
+		}
+
+		#hud #team-meters #blue {
+			background: #00F9;
+			text-align: left;
+			border-radius: 0 4px 4px 0;
+			margin-left: auto;
+		}
+	</style>
 </head>
 
 <body>
-  <div id="hud">
-    <div id="team-meters">
-      <div id="red"></div>
-      <div id="blue"></div>
-    </div>
-  </div>
+	<div id="hud">
+		<div id="team-meters">
+			<div id="red"></div>
+			<div id="blue"></div>
+		</div>
+	</div>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-  <script src="/client/packages/gup.js"></script>
+	<script src="/client/packages/gup.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/phaser/2.4.6/phaser.min.js"></script>
 	<script src="/client/c_main.js" type="module"></script>
 </body>

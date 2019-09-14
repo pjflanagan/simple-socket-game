@@ -2,12 +2,12 @@ import { EVENTS } from '/helpers/index.js';
 
 class ClientSocket {
 	constructor(app) {
-    const name = gup('name') || '';
+		const name = gup('name') || '';
 		this.socket = io({
-      query: {
-        name
-      }
-    });
+			query: {
+				name
+			}
+		});
 		this.app = app;
 		const self = this;
 
@@ -17,16 +17,16 @@ class ClientSocket {
 			self.recvAddUser(data);
 			self.sendShareSelf(data);
 		});
-    this.socket.on(EVENTS.removeUser, (data) => self.recvRemoveUser(data));
+		this.socket.on(EVENTS.removeUser, (data) => self.recvRemoveUser(data));
 
 		this.socket.on(EVENTS.keyChange, (data) => self.recvKeyChange(data));
 		this.socket.on(EVENTS.angleChange, (data) => self.recvAngleChange(data));
 		this.socket.on(EVENTS.stateUpdate, (data) => self.recvStateUpdate(data));
 		this.socket.on(EVENTS.fire, (data) => self.recvFire(data));
 		this.socket.on(EVENTS.hit, (data) => self.recvLaserHit(data));
-  }
-  
-  //
+	}
+
+	//
 
 	recvAddSelf(data) {
 		this.app.recvAddSelf(data);
@@ -41,14 +41,14 @@ class ClientSocket {
 	}
 
 	sendShareSelf(data) {
-    // if(!this.app.isAlive()) return;
+		// if(!this.app.isAlive()) return;
 		this.socket.emit(EVENTS.shareSelf, {
 			to: data.i,
 			user: this.app.getUserState()
 		});
-  }
-  
-  //
+	}
+
+	//
 
 	sendKeyChange(data) {
 		this.socket.emit(EVENTS.keyChange, data);
@@ -56,9 +56,9 @@ class ClientSocket {
 
 	recvKeyChange(data) {
 		this.app.recvKeyChange(data);
-  }
-  
-  //
+	}
+
+	//
 
 	sendAngleChange(data) {
 		this.socket.emit(EVENTS.angleChange, data);
@@ -66,9 +66,9 @@ class ClientSocket {
 
 	recvAngleChange(data) {
 		this.app.recvAngleChange(data);
-  }
-  
-  //
+	}
+
+	//
 
 	// sendStateUpdate(data) {
 	// 	this.socket.emit(EVENTS.stateUpdate, data);
@@ -76,9 +76,9 @@ class ClientSocket {
 
 	// recvStateUpdate(data) {
 	// 	this.app.recvStateUpdate(data);
-  // }
-  
-  //
+	// }
+
+	//
 
 	sendFire(data) {
 		this.socket.emit(EVENTS.fire, data);
@@ -86,17 +86,17 @@ class ClientSocket {
 
 	recvFire(data) {
 		this.app.recvFire(data);
-  }
+	}
 
-  //
-  
-  sendLaserHit(data) {
-    this.socket.emit(EVENTS.hit, data);
-  }
+	//
 
-  recvLaserHit(data) {
-    this.app.recvLaserHit(data);
-  }
+	sendLaserHit(data) {
+		this.socket.emit(EVENTS.hit, data);
+	}
+
+	recvLaserHit(data) {
+		this.app.recvLaserHit(data);
+	}
 
 }
 

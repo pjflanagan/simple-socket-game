@@ -1,9 +1,9 @@
 
 const EXPLOSION_PROPS = {
-  lifespan: () => (Math.random()*.5 + .5) * 500,
-  speed: () => (Math.random()*.5 + .5) * 360,
-  angle: () => Math.random() * Math.PI * 2,
-  count: () => Math.floor(Math.random() * 20) + 10
+	lifespan: () => (Math.random() * .5 + .5) * 500,
+	speed: () => (Math.random() * .5 + .5) * 360,
+	angle: () => Math.random() * Math.PI * 2,
+	count: () => Math.floor(Math.random() * 20) + 10
 }
 
 /**
@@ -21,19 +21,19 @@ const Debris = function (game, data) {
 	this.scale.setTo(.25, .25);
 
 	// enable physics on the laser
-  game.physics.enable(this, Phaser.Physics.ARCADE);
-  const speed = EXPLOSION_PROPS.speed();
-  const angle = EXPLOSION_PROPS.angle();
+	game.physics.enable(this, Phaser.Physics.ARCADE);
+	const speed = EXPLOSION_PROPS.speed();
+	const angle = EXPLOSION_PROPS.angle();
 	game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
 };
 
 Debris.prototype = Object.create(Phaser.Sprite.prototype);
 Debris.prototype.constructor = Debris;
 
-export const explosion = function(game, data) {
-  const DebrisGroup = game.add.group();
-  const count = EXPLOSION_PROPS.count();
-  for(let i = 0; i < count; ++i) {
-    DebrisGroup.add(new Debris(game, data));
-  }
+export const explosion = function (game, data) {
+	const DebrisGroup = game.add.group();
+	const count = EXPLOSION_PROPS.count();
+	for (let i = 0; i < count; ++i) {
+		DebrisGroup.add(new Debris(game, data));
+	}
 };

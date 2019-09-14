@@ -5,7 +5,7 @@ import { EVENTS } from '../helpers/index.js';
 
 class ServerSocket {
 	constructor(io) {
-    this.game = new Game(this);
+		this.game = new Game(this);
 
 		this.io = io;
 		this.io.on(EVENTS.connection, (socket) => {
@@ -17,10 +17,10 @@ class ServerSocket {
 			socket.on(EVENTS.keyChange, (data) => self.keyChange(data));
 			socket.on(EVENTS.angleChange, (data) => self.angleChange(data));
 			socket.on(EVENTS.stateUpdate, (data) => self.stateUpdate(socket, data));
-      socket.on(EVENTS.fire, (data) => self.fire(data));
-      socket.on(EVENTS.hit, (data) => self.recvHit(data));
+			socket.on(EVENTS.fire, (data) => self.fire(data));
+			socket.on(EVENTS.hit, (data) => self.recvHit(data));
 		});
-  }
+	}
 
 	// connect
 	recvConnection(socket) {
@@ -31,7 +31,7 @@ class ServerSocket {
 	sendConnection(socket, user) {
 		socket.broadcast.emit(EVENTS.addNewUser, user);
 		this.io.to(`${user.i}`).emit(EVENTS.addSelf, user);
-  }
+	}
 
 	// disconnect
 	recvDisconnect(socket) {
@@ -40,14 +40,14 @@ class ServerSocket {
 
 	sendRemoveUser(socket) {
 		this.io.emit(EVENTS.removeUser, socket.id);
-  }
-  
-  recvHit(data) {
-    this.game.hit(data);
-  }
+	}
+
+	recvHit(data) {
+		this.game.hit(data);
+	}
 
 	sendHit(data) {
-    this.io.emit(EVENTS.hit, data);
+		this.io.emit(EVENTS.hit, data);
 	}
 
 	// share self

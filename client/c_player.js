@@ -9,10 +9,12 @@ class Player {
 		this.values = {
 			keys: { u: false, d: false, l: false, r: false },
 			angle: 0
-    };
+		};
 
 		window.addEventListener("mousemove", (e) => { this.mouse.x = e.clientX; this.mouse.y = e.clientY; });
 		window.addEventListener("mousedown", (e) => { this.handleClick(); })
+		// document.addEventListener("visibilitychange", (e) => { this.defaultKeys(); });
+
 	}
 
 	get keys() {
@@ -32,6 +34,11 @@ class Player {
 			newKeys.l !== this.values.keys.l ||
 			newKeys.r !== this.values.keys.r;
 	}
+
+	// defaultKeys() {
+	// 	this.values.keys = { u: false, d: false, r: false, l: false };
+	// 	this.app.sendKeyChange();
+	// }
 
 	get angle() {
 		return this.values.angle;
@@ -60,9 +67,9 @@ class Player {
 	}
 
 	reload() {
-    if (this.rounds === 0) {
-      setTimeout(() => { this.rounds = LASER_PROPS.ROUNDS; }, LASER_PROPS.RELOAD_INTERVAL);
-    }
+		if (this.rounds === 0) {
+			setTimeout(() => { this.rounds = LASER_PROPS.ROUNDS; }, LASER_PROPS.RELOAD_INTERVAL);
+		}
 	}
 
 	input(self, game, keys) {
