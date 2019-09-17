@@ -92,11 +92,11 @@ App.Main.prototype = {
 	drawZones: function () {
 		const graphics = this.game.add.graphics(0, 0);
 		graphics.beginFill(0xFF0000);
-		graphics.alpha = 0.2;
+		graphics.alpha = 0.05;
 		graphics.drawRect(0, 0, GAME.WORLD.SAFE_ZONE_WIDTH, GAME.WORLD.HEIGHT);
 		graphics.endFill();
 		this.RedZone = this.game.add.sprite(0, 0, graphics.generateTexture());
-		this.RedZone.alpha = 0.2;
+		this.RedZone.alpha = 0.05;
 		graphics.beginFill(0x0000FF);
 		graphics.alpha = 0.2;
 		graphics.drawRect(GAME.WORLD.WIDTH - GAME.WORLD.SAFE_ZONE_WIDTH, 0, GAME.WORLD.SAFE_ZONE_WIDTH, GAME.WORLD.HEIGHT);
