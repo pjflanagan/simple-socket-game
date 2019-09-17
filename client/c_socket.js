@@ -13,12 +13,11 @@ class ClientSocket {
 
 		this.socket.on(EVENTS.addSelf, (buffer) => self.recvAddSelf(buffer));
 		this.socket.on(EVENTS.addUser, (buffer) => self.recvAddUser(buffer));
-    this.socket.on(EVENTS.addNewUser, (buffer) => self.revAddNewUser(buffer));
+    this.socket.on(EVENTS.addNewUser, (buffer) => self.recvAddNewUser(buffer));
 		this.socket.on(EVENTS.removeUser, (userID) => self.recvRemoveUser(userID));
 
 		this.socket.on(EVENTS.keyChange, (buffer) => self.recvKeyChange(buffer));
 		this.socket.on(EVENTS.angleChange, (buffer) => self.recvAngleChange(buffer));
-		this.socket.on(EVENTS.stateUpdate, (buffer) => self.recvStateUpdate(buffer));
 		this.socket.on(EVENTS.fire, (buffer) => self.recvFire(buffer));
 		this.socket.on(EVENTS.hit, (buffer) => self.recvLaserHit(buffer));
   }
@@ -62,7 +61,7 @@ class ClientSocket {
 	}
 
 	recvKeyChange(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = msgpack.decode(buffer.data);
 		this.app.recvKeyChange(data);
 	}
 
@@ -74,7 +73,7 @@ class ClientSocket {
 	}
 
 	recvAngleChange(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = msgpack.decode(buffer.data);
 		this.app.recvAngleChange(data);
 	}
 

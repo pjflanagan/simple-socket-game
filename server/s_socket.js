@@ -14,10 +14,10 @@ class ServerSocket {
 			self.recvConnection(socket);
 
 			socket.on(EVENTS.disconnect, () => self.recvDisconnect(socket));
-			socket.on(EVENTS.shareSelf, (buffer) => self.fwdShareSelf(socket, buffer));
+      socket.on(EVENTS.shareSelf, (buffer) => self.fwdShareSelf(socket, buffer));
+    
 			socket.on(EVENTS.keyChange, (buffer) => self.fwdKeyChange(buffer));
 			socket.on(EVENTS.angleChange, (buffer) => self.fwdAngleChange(buffer));
-			socket.on(EVENTS.stateUpdate, (buffer) => self.fwdStateUpdate(socket, buffer));
 			socket.on(EVENTS.fire, (buffer) => self.recvFire(buffer));
       socket.on(EVENTS.hit, (buffer) => self.recvHit(buffer));
 		});
@@ -25,7 +25,7 @@ class ServerSocket {
   
   // TODO: use this
   // handle(socket, buffer, func) {
-  //   const data = msgpack.decode(new Uint8Array(buffer));
+  //   const data = msgpack.decode(buffer.data);
   //   return func(socket, data);
   // }
 
@@ -51,7 +51,7 @@ class ServerSocket {
   }
 
   fwdShareSelf(socket, buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = msgpack.decode(buffer.data);
     const replyBuff = msgpack.encode(data.user);
 		socket.to(`${data.to}`).emit(EVENTS.addUser, replyBuff);
 	}
@@ -59,7 +59,7 @@ class ServerSocket {
   // Hit
 
 	recvHit(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = msgpack.decode(buffer.data);
 		this.game.hit(data);
 	}
 
@@ -83,13 +83,13 @@ class ServerSocket {
   // Fire
   
   recvFire(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = msgpack.decode(buffer.data);
     // TODO: add a bullet to here to track so we can remove it once it hits
     this.sendFire(data);
   }
 
 	sendFire(data) {
-    const buffer = msgpack.encode(data.user);
+    const buffer = msgpack.encode(data);
 		this.io.emit(EVENTS.fire, buffer);
 	}
 
