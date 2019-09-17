@@ -1,5 +1,6 @@
 import { Game } from './s_game.js';
 import { EVENTS } from '../helpers/index.js';
+import * as msgpack from 'msgpack-lite';
 
 // https://socket.io/docs/emit-cheatsheet/
 
@@ -13,66 +14,83 @@ class ServerSocket {
 			self.recvConnection(socket);
 
 			socket.on(EVENTS.disconnect, () => self.recvDisconnect(socket));
-			socket.on(EVENTS.shareSelf, (data) => self.shareSelf(socket, data));
-			socket.on(EVENTS.keyChange, (data) => self.keyChange(data));
-			socket.on(EVENTS.angleChange, (data) => self.angleChange(data));
-			socket.on(EVENTS.stateUpdate, (data) => self.stateUpdate(socket, data));
-			socket.on(EVENTS.fire, (data) => self.fire(data));
-			socket.on(EVENTS.hit, (data) => self.recvHit(data));
+			socket.on(EVENTS.shareSelf, (buffer) => self.fwdShareSelf(socket, buffer));
+			socket.on(EVENTS.keyChange, (buffer) => self.fwdKeyChange(buffer));
+			socket.on(EVENTS.angleChange, (buffer) => self.fwdAngleChange(buffer));
+			socket.on(EVENTS.stateUpdate, (buffer) => self.fwdStateUpdate(socket, buffer));
+			socket.on(EVENTS.fire, (buffer) => self.recvFire(buffer));
+      socket.on(EVENTS.hit, (buffer) => self.recvHit(buffer));
 		});
-	}
+  }
+  
+  // TODO: use this
+  // handle(socket, buffer, func) {
+  //   const data = msgpack.decode(new Uint8Array(buffer));
+  //   return func(socket, data);
+  // }
 
-	// connect
+  // Admin
+
 	recvConnection(socket) {
 		console.log('connection:', socket.id, socket.handshake.query.name);
 		this.game.connection(socket, socket.handshake.query.name);
 	}
 
-	sendConnection(socket, user) {
-		socket.broadcast.emit(EVENTS.addNewUser, user);
-		this.io.to(`${user.i}`).emit(EVENTS.addSelf, user);
+	sendConnection(socket, data) {
+    const buffer = msgpack.encode(data);
+		socket.broadcast.emit(EVENTS.addNewUser, buffer);
+		this.io.to(`${data.i}`).emit(EVENTS.addSelf, buffer);
 	}
 
-	// disconnect
 	recvDisconnect(socket) {
 		this.game.disconnect(socket);
 	}
 
 	sendRemoveUser(socket) {
 		this.io.emit(EVENTS.removeUser, socket.id);
-	}
+  }
 
-	recvHit(data) {
+  fwdShareSelf(socket, buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
+    const replyBuff = msgpack.encode(data.user);
+		socket.to(`${data.to}`).emit(EVENTS.addUser, replyBuff);
+	}
+  
+  // Hit
+
+	recvHit(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
 		this.game.hit(data);
 	}
 
 	sendHit(data) {
-		this.io.emit(EVENTS.hit, data);
+    const buffer = msgpack.encode(data);
+		this.io.emit(EVENTS.hit, buffer);
 	}
 
-	// share self
-	shareSelf(socket, data) {
-		socket.to(`${data.to}`).emit(EVENTS.addUser, data.user);
+  // Key
+  
+	fwdKeyChange(buffer) {
+		this.io.emit(EVENTS.keyChange, buffer);
 	}
 
-	// state update
-	stateUpdate(socket, data) {
-		socket.broadcast.emit(EVENTS.stateUpdate, data);
+  // Angle
+
+	fwdAngleChange(buffer) {
+		this.io.emit(EVENTS.angleChange, buffer);
 	}
 
-	// key change
-	keyChange(data) {
-		this.io.emit(EVENTS.keyChange, data);
-	}
+  // Fire
+  
+  recvFire(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
+    // TODO: add a bullet to here to track so we can remove it once it hits
+    this.sendFire(data);
+  }
 
-	// key change
-	angleChange(data) {
-		this.io.emit(EVENTS.angleChange, data);
-	}
-
-	// fire
-	fire(data) {
-		this.io.emit(EVENTS.fire, data);
+	sendFire(data) {
+    const buffer = msgpack.encode(data.user);
+		this.io.emit(EVENTS.fire, buffer);
 	}
 
 }

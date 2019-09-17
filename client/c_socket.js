@@ -9,92 +9,96 @@ class ClientSocket {
 			}
 		});
 		this.app = app;
-		const self = this;
+    const self = this;
 
-		this.socket.on(EVENTS.addSelf, (data) => self.recvAddSelf(data));
-		this.socket.on(EVENTS.addUser, (data) => self.recvAddUser(data))
-		this.socket.on(EVENTS.addNewUser, (data) => {
-			self.recvAddUser(data);
-			self.sendShareSelf(data);
-		});
-		this.socket.on(EVENTS.removeUser, (data) => self.recvRemoveUser(data));
+		this.socket.on(EVENTS.addSelf, (buffer) => self.recvAddSelf(buffer));
+		this.socket.on(EVENTS.addUser, (buffer) => self.recvAddUser(buffer));
+    this.socket.on(EVENTS.addNewUser, (buffer) => self.revAddNewUser(buffer));
+		this.socket.on(EVENTS.removeUser, (userID) => self.recvRemoveUser(userID));
 
-		this.socket.on(EVENTS.keyChange, (data) => self.recvKeyChange(data));
-		this.socket.on(EVENTS.angleChange, (data) => self.recvAngleChange(data));
-		this.socket.on(EVENTS.stateUpdate, (data) => self.recvStateUpdate(data));
-		this.socket.on(EVENTS.fire, (data) => self.recvFire(data));
-		this.socket.on(EVENTS.hit, (data) => self.recvLaserHit(data));
-	}
+		this.socket.on(EVENTS.keyChange, (buffer) => self.recvKeyChange(buffer));
+		this.socket.on(EVENTS.angleChange, (buffer) => self.recvAngleChange(buffer));
+		this.socket.on(EVENTS.stateUpdate, (buffer) => self.recvStateUpdate(buffer));
+		this.socket.on(EVENTS.fire, (buffer) => self.recvFire(buffer));
+		this.socket.on(EVENTS.hit, (buffer) => self.recvLaserHit(buffer));
+  }
 
-	//
+	// Admin
 
-	recvAddSelf(data) {
+	recvAddSelf(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
 		this.app.recvAddSelf(data);
 	}
 
-	recvAddUser(data) {
+	recvAddUser(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
 		this.app.recvAddUser(data);
-	}
+  }
 
-	recvRemoveUser(userID) {
+  recvRemoveUser(userID) {
 		this.app.recvRemoveUser(userID);
-	}
+  }
 
-	sendShareSelf(data) {
+  recvAddNewUser(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
+    this.app.recvAddUser(data);
+		this.sendShareSelf(data.i);
+  }
+
+	sendShareSelf(userID) {
 		// if(!this.app.isAlive()) return;
-		this.socket.emit(EVENTS.shareSelf, {
-			to: data.i,
+    const buffer = msgpack.encode({
+			to: userID,
 			user: this.app.getUserState()
 		});
+		this.socket.emit(EVENTS.shareSelf, buffer);
 	}
 
-	//
+	// Key
 
 	sendKeyChange(data) {
-		this.socket.emit(EVENTS.keyChange, data);
+    const buffer = msgpack.encode(data);
+		this.socket.emit(EVENTS.keyChange, buffer);
 	}
 
-	recvKeyChange(data) {
+	recvKeyChange(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
 		this.app.recvKeyChange(data);
 	}
 
-	//
+	// Angle
 
 	sendAngleChange(data) {
-		this.socket.emit(EVENTS.angleChange, data);
+    const buffer = msgpack.encode(data);
+		this.socket.emit(EVENTS.angleChange, buffer);
 	}
 
-	recvAngleChange(data) {
+	recvAngleChange(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
 		this.app.recvAngleChange(data);
 	}
 
-	//
-
-	// sendStateUpdate(data) {
-	// 	this.socket.emit(EVENTS.stateUpdate, data);
-	// }
-
-	// recvStateUpdate(data) {
-	// 	this.app.recvStateUpdate(data);
-	// }
-
-	//
+	// Laser
 
 	sendFire(data) {
-		this.socket.emit(EVENTS.fire, data);
+    const buffer = msgpack.encode(data);
+		this.socket.emit(EVENTS.fire, buffer);
 	}
 
-	recvFire(data) {
+	recvFire(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
 		this.app.recvFire(data);
 	}
 
-	//
+	// Hit
 
 	sendLaserHit(data) {
-		this.socket.emit(EVENTS.hit, data);
+    const buffer = msgpack.encode(data);
+		this.socket.emit(EVENTS.hit, buffer);
 	}
 
-	recvLaserHit(data) {
+	recvLaserHit(buffer) {
+    const data = msgpack.decode(new Uint8Array(buffer));
 		this.app.recvLaserHit(data);
 	}
 
