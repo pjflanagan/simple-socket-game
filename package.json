@@ -4,10 +4,10 @@
 	"description": "Oh snap!",
 	"engines": {
 		"node": "8.6.0"
-  },
-  "scripts": {
-    "build": "webpack --config webpack.config.js"
-  },
+	},
+	"scripts": {
+		"build": "webpack --config webpack.config.js"
+	},
 	"dependencies": {
 		"babel-preset-env": "^1.7.0",
 		"babel-register": "^6.26.0",
@@ -20,7 +20,7 @@
 		"socket.io": "^2.1.1"
 	},
 	"devDependencies": {
-    "dashflow": "^1.4.0",
+		"dashflow": "^1.4.0",
 		"webpack": "^4.40.2",
 		"webpack-cli": "^3.3.9"
 	}

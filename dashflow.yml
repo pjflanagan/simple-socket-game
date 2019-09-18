@@ -5,26 +5,19 @@ commands:
 streams:
   watch-web:
     watch: { glob: "src/client/**/*.js" }
-  watch-server:
-    watch: { glob: "src/server/**/*.js" }
 
 workflows:
-  initial-web:
+  initial:
     match: SYSTEM:started
-    command: run-web
-  initial-server:
-    match: SYSTEM:started
-    command: run-server
+    parallel: 
+      - command: run-web
+      - command: run-server
+
   rebuild-web:
     match: watch-web:.*
     serial:
       - wait: 1000
       - command: run-web
-  reload-server:
-    match: watch-server:.*
-    serial:
-      - wait: 1000
-      - command: run-server
 
 dashboards:
   main:

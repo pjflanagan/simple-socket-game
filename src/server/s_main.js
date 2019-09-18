@@ -13,7 +13,7 @@ import { ServerSocket } from './s_socket.js'
 const app = express();
 const server = http.Server(app);
 const io = new SocketIO(server);
-const port = process.env.PORT || 5164;
+const port = process.env.PORT || 6415;
 new ServerSocket(io);
 
 app.set('view engine', 'ejs');
@@ -37,5 +37,5 @@ app.use('/packages', express.static(path.resolve(__dirname + '/../packages')));
 // TODO: make a debug option so you can test on multiple computers
 // https://stackoverflow.com/questions/30712141/connect-to-localhost3000-from-another-computer-expressjs-nodejs
 server.listen(port, () => {
-	console.log('[INFO] Listening on *:' + port);
+  console.log('[INFO] Listening on *:' + port);
 });

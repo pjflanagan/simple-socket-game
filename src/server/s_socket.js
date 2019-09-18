@@ -36,6 +36,7 @@ class ServerSocket {
 	}
 
 	recvDisconnect(socket) {
+		console.log('disconnect:', socket.id);
 		this.game.disconnect(socket);
 	}
 
