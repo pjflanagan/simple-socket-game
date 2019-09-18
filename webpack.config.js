@@ -6,7 +6,7 @@ const path = require('path');
 module.exports = {
 
   // Path to your entry point. From this file Webpack will begin his work
-  entry: './client/index.js',
+  entry: './src/client/index.js',
 
   // Path and filename of your result bundle.
   // Webpack will bundle all JavaScript into this file

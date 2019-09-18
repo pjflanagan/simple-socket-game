@@ -29,8 +29,8 @@ app.get('/game', function (req, res) {
 });
 
 // app.use(compression({}));
-app.use('/dist', express.static(path.resolve(__dirname + '/../dist')));
-app.use('/asset', express.static(path.resolve(__dirname + '/../assets')));
+app.use('/assets', express.static(path.resolve(__dirname + '/../../assets')));
+app.use('/dist', express.static(path.resolve(__dirname + '/../../dist')));
 app.use('/packages', express.static(path.resolve(__dirname + '/../packages')));
 
 

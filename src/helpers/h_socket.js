@@ -118,7 +118,7 @@ const encode = function(event, data) {
 }
 
 const decode = function(event, buffer) {
-  const packet = msgpack.decode(buffer);
+  const packet = msgpack.decode(buffer.data);
   return unpack(packet, EVENT_MODELS[event]);
 }
 
