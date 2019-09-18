@@ -1,0 +1,65 @@
+commands:
+  run-web: npm run build
+  run-server: node ./src/start.js
+
+streams:
+  watch-web:
+    watch: { glob: "src/client/**/*.js" }
+  watch-server:
+    watch: { glob: "src/server/**/*.js" }
+
+workflows:
+  initial-web:
+    match: SYSTEM:started
+    command: run-web
+  initial-server:
+    match: SYSTEM:started
+    command: run-server
+  rebuild-web:
+    match: watch-web:.*
+    serial:
+      - wait: 1000
+      - command: run-web
+  reload-server:
+    match: watch-server:.*
+    serial:
+      - wait: 1000
+      - command: run-server
+
+dashboards:
+  main:
+    - log:
+        position: quadrant/left
+        title: Webpack
+        filter: command:run-web:.*
+        gauge:
+          filter: command:run-web:state:.*
+          scan:
+            when:
+              - pattern: started
+                text: Running
+                level: warning
+              - pattern: exited with 0
+                text: Passed
+                level: success
+              - pattern: exited with
+                text: Failed
+                level: error
+            default:
+              text: Unknown
+    - log:
+        position: quadrant/right
+        title: Server
+        filter: command:run-server:.*
+        gauge:
+          filter: command:run-server:state:.*
+          scan:
+            when:
+              - pattern: started
+                text: Running
+                level: success
+              - pattern: exited with
+                text: Failed
+                level: error
+            default:
+              text: Unknown

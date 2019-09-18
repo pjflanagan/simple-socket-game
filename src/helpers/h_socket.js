@@ -108,17 +108,12 @@ const unpack = function(packet, model) {
 }
 
 const encode = function(event, data) {
-  console.log('data', roughSizeOfObject(data));
-  const dataBuffer = msgpack.encode(data);
-  console.log('data buffer', dataBuffer.length);
   const packet = pack(data, EVENT_MODELS[event]);
-  console.log('packet', roughSizeOfObject(packet));
-  const buffer = msgpack.encode(packet);
-  console.log('packet buffer', buffer.length);
+  return msgpack.encode(packet);
 }
 
 const decode = function(event, buffer) {
-  const packet = msgpack.decode(buffer.data);
+  const packet = msgpack.decode(new Uint8Array(buffer));
   return unpack(packet, EVENT_MODELS[event]);
 }
 
