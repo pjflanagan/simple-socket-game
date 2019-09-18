@@ -36,25 +36,25 @@ export const defaultUserState = function (userID, name, team) {
 	const x = (team === GAME.TEAM.RED) ? randomSafeZoneWidth : GAME.WORLD.WIDTH - GAME.WORLD.SAFE_ZONE_WIDTH + randomSafeZoneWidth;
 
 	return {
-		i: userID, // id
-		n: name,
-		t: team,
-		s: 0, // score
-		p: { // position
+		userID,
+		name,
+		team,
+		score: 0,
+		position: {
 			x,
 			y: randomInt(200, GAME.WORLD.HEIGHT - 200),
 			a: Math.random() * 180 // angle
 		},
-		v: { // velocity
+		velocity: {
 			x: 0,
 			y: 0,
 		},
-		h: 100, // health
-		k: { // keys
-			u: false, // up
-			l: false, // left
-			r: false, // right
-			d: false
+		// health: 100,
+		keys: {
+			up: false,
+			down: false,
+			right: false,
+			left: false
 		}
 	};
 }

@@ -1,4 +1,4 @@
-import { SHIP_PROPS, LASER_PROPS } from '/helpers/index.js';
+import { SHIP_PROPS, LASER_PROPS } from '../helpers/index.js';
 
 class Player {
 	constructor(app) {
@@ -8,7 +8,7 @@ class Player {
 		this.rounds = LASER_PROPS.ROUNDS;
 		this.mouse = { x: 0, y: 0 };
 		this.values = {
-			keys: { u: false, d: false, l: false, r: false },
+			keys: { up: false, down: false, left: false, right: false },
 			angle: 0
 		};
 
@@ -30,15 +30,15 @@ class Player {
 	}
 
 	diffKeys(newKeys) {
-		return newKeys.u !== this.values.keys.u ||
-			newKeys.d !== this.values.keys.d ||
-			newKeys.l !== this.values.keys.l ||
-			newKeys.r !== this.values.keys.r;
+		return newKeys.up !== this.values.keys.up ||
+			newKeys.down !== this.values.keys.down ||
+			newKeys.left !== this.values.keys.left ||
+			newKeys.right !== this.values.keys.right;
 	}
 
 	defaultKeys() {
 		console.log('DEAFAULT KEYS')
-		this.values.keys = { u: false, d: false, r: false, l: false };
+		this.values.keys = { up: false, down: false, left: false, right: false };
 		this.app.sendKeyChange();
 	}
 

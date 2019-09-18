@@ -1,3 +1,4 @@
+// import Phaser from 'phaser';
 
 const EXPLOSION_PROPS = {
 	lifespan: () => (Math.random() * .5 + .5) * 500,
@@ -10,11 +11,11 @@ const EXPLOSION_PROPS = {
  * @class Debris @extends Phaser.Sprite
  */
 const Debris = function (game, data) {
-	Phaser.Sprite.call(this, game, data.p.x, data.p.y, 'imgDebris');
+	Phaser.Sprite.call(this, game, data.position.x, data.position.y, 'imgDebris');
 
 	this.anchor.set(.5, .5);
 	this.lifespan = EXPLOSION_PROPS.lifespan();
-	this.reset(data.p.x, data.p.y);
+	this.reset(data.position.x, data.position.y);
 
 	this.animations.add('fire', [0, 1, 2]);
 	this.animations.play('fire', 8, true);

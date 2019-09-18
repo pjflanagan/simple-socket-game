@@ -1,18 +1,19 @@
-import { LASER_PROPS, GAME } from '/helpers/index.js';
+import { LASER_PROPS, GAME } from '../../helpers/index.js';
+// import Phaser from 'phaser';
 
 /**
- * @class Laser @extends PHaser.Sprite
+ * @class Laser @extends Phaser.Sprite
  */
 var Laser = function (app, game, data) {
-	const image = (data.t === GAME.TEAM.RED) ? 'imgRedLaser' : 'imgBlueLaser';
-	Phaser.Sprite.call(this, game, data.p.x, data.p.y, image);
+	const image = (data.team === GAME.TEAM.RED) ? 'imgRedLaser' : 'imgBlueLaser';
+	Phaser.Sprite.call(this, game, data.position.x, data.position.y, image);
 	this.app = app;
-	this.userID = data.i;
-	this.team = data.t;
+	this.userID = data.userID;
+	this.team = data.team;
 
 	this.anchor.set(.5, .5);
 	this.lifespan = LASER_PROPS.LIFESPAN;
-	this.reset(data.p.x, data.p.y);
+	this.reset(data.position.x, data.position.y);
 
 	this.animations.add('fire', [0, 1, 2]);
 	this.animations.play('fire', 8, true);
@@ -20,7 +21,7 @@ var Laser = function (app, game, data) {
 
 	// enable physics on the laser
 	this.game.physics.enable(this, Phaser.Physics.ARCADE);
-	this.game.physics.arcade.velocityFromRotation(data.p.a, LASER_PROPS.SPEED, this.body.velocity);
+	this.game.physics.arcade.velocityFromRotation(data.position.a, LASER_PROPS.SPEED, this.body.velocity);
 };
 
 Laser.prototype = Object.create(Phaser.Sprite.prototype);

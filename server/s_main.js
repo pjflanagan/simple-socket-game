@@ -29,8 +29,9 @@ app.get('/game', function (req, res) {
 });
 
 // app.use(compression({}));
-app.use('/client', express.static(path.resolve(__dirname + '/../client')));
-app.use('/helpers', express.static(path.resolve(__dirname + '/../helpers')));
+app.use('/dist', express.static(path.resolve(__dirname + '/../dist')));
+app.use('/asset', express.static(path.resolve(__dirname + '/../assets')));
+app.use('/packages', express.static(path.resolve(__dirname + '/../packages')));
 
 
 // TODO: make a debug option so you can test on multiple computers

@@ -1,4 +1,4 @@
-import { GAME, LASER_PROPS } from '/helpers/index.js';
+import { GAME, LASER_PROPS } from '../helpers/index.js';
 
 export class HUD {
 	constructor(app) {

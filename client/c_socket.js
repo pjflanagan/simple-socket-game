@@ -1,4 +1,5 @@
-import { EVENTS } from '/helpers/index.js';
+import { EVENTS, encode, decode } from '../helpers/index.js';
+import io from 'socket.io-client';
 
 class ClientSocket {
 	constructor(app) {
@@ -25,12 +26,12 @@ class ClientSocket {
 	// Admin
 
 	recvAddSelf(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = decode(EVENTS.addSelf, buffer);
 		this.app.recvAddSelf(data);
 	}
 
 	recvAddUser(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = decode(EVENTS.addUser, buffer);
 		this.app.recvAddUser(data);
   }
 
@@ -39,15 +40,16 @@ class ClientSocket {
   }
 
   recvAddNewUser(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = decode(EVENTS.addNewUser, buffer);
     this.app.recvAddUser(data);
-		this.sendShareSelf(data.i);
+		this.sendShareSelf(data.userID);
   }
 
-	sendShareSelf(userID) {
-		// if(!this.app.isAlive()) return;
-    const buffer = msgpack.encode({
-			to: userID,
+	sendShareSelf(toUserID) {
+    // if(!this.app.isAlive()) return;
+    
+    const buffer = encode({
+			to: toUserID,
 			user: this.app.getUserState()
 		});
 		this.socket.emit(EVENTS.shareSelf, buffer);
@@ -56,48 +58,48 @@ class ClientSocket {
 	// Key
 
 	sendKeyChange(data) {
-    const buffer = msgpack.encode(data);
+    const buffer = encode(data);
 		this.socket.emit(EVENTS.keyChange, buffer);
 	}
 
 	recvKeyChange(buffer) {
-    const data = msgpack.decode(buffer.data);
+    const data = decode(EVENTS.keyChange, buffer); // NOTE: either new Uint8Array(buffer) or buffer.data
 		this.app.recvKeyChange(data);
 	}
 
 	// Angle
 
 	sendAngleChange(data) {
-    const buffer = msgpack.encode(data);
+    const buffer = encode(EVENTS.angleChange, data);
 		this.socket.emit(EVENTS.angleChange, buffer);
 	}
 
 	recvAngleChange(buffer) {
-    const data = msgpack.decode(buffer.data);
+    const data = decode(EVENTS.angleChange, buffer);
 		this.app.recvAngleChange(data);
 	}
 
 	// Laser
 
 	sendFire(data) {
-    const buffer = msgpack.encode(data);
+    const buffer = encode(EVENTS.fire, data);
 		this.socket.emit(EVENTS.fire, buffer);
 	}
 
 	recvFire(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = decode(EVENTS.fire, buffer);
 		this.app.recvFire(data);
 	}
 
 	// Hit
 
 	sendLaserHit(data) {
-    const buffer = msgpack.encode(data);
+    const buffer = encode(EVENTS.hit, data);
 		this.socket.emit(EVENTS.hit, buffer);
 	}
 
 	recvLaserHit(buffer) {
-    const data = msgpack.decode(new Uint8Array(buffer));
+    const data = decode(EVENTS.hit, buffer);
 		this.app.recvLaserHit(data);
 	}
 

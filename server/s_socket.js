@@ -1,6 +1,5 @@
 import { Game } from './s_game.js';
-import { EVENTS } from '../helpers/index.js';
-import * as msgpack from 'msgpack-lite';
+import { EVENTS, encode, decode } from '../helpers/index.js';
 
 // https://socket.io/docs/emit-cheatsheet/
 
@@ -22,14 +21,8 @@ class ServerSocket {
       socket.on(EVENTS.hit, (buffer) => self.recvHit(buffer));
 		});
   }
-  
-  // TODO: use this
-  // handle(socket, buffer, func) {
-  //   const data = msgpack.decode(buffer.data);
-  //   return func(socket, data);
-  // }
 
-  // Admin
+  // ADMIN
 
 	recvConnection(socket) {
 		console.log('connection:', socket.id, socket.handshake.query.name);
@@ -37,9 +30,9 @@ class ServerSocket {
 	}
 
 	sendConnection(socket, data) {
-    const buffer = msgpack.encode(data);
+    const buffer = encode(EVENTS.addSelf, data);
 		socket.broadcast.emit(EVENTS.addNewUser, buffer);
-		this.io.to(`${data.i}`).emit(EVENTS.addSelf, buffer);
+		this.io.to(`${data.userID}`).emit(EVENTS.addSelf, buffer);
 	}
 
 	recvDisconnect(socket) {
@@ -51,45 +44,45 @@ class ServerSocket {
   }
 
   fwdShareSelf(socket, buffer) {
-    const data = msgpack.decode(buffer.data);
-    const replyBuff = msgpack.encode(data.user);
+    const data = decode(EVENTS.shareSelf, buffer);
+    const replyBuff = encode(EVENTS.addUser, data.user);
 		socket.to(`${data.to}`).emit(EVENTS.addUser, replyBuff);
 	}
   
-  // Hit
+  // HIT
 
 	recvHit(buffer) {
-    const data = msgpack.decode(buffer.data);
+    const data = decode(EVENTS.hit, buffer);
 		this.game.hit(data);
 	}
 
 	sendHit(data) {
-    const buffer = msgpack.encode(data);
+    const buffer = encode(EVENTS.hit, data);
 		this.io.emit(EVENTS.hit, buffer);
 	}
 
-  // Key
+  // KEY
   
 	fwdKeyChange(buffer) {
 		this.io.emit(EVENTS.keyChange, buffer);
 	}
 
-  // Angle
+  // ANGLE
 
 	fwdAngleChange(buffer) {
 		this.io.emit(EVENTS.angleChange, buffer);
 	}
 
-  // Fire
+  // FIRE
   
   recvFire(buffer) {
-    const data = msgpack.decode(buffer.data);
-    // TODO: add a bullet to here to track so we can remove it once it hits
+    const data = decode(EVENTS.fire, buffer);
+    // TODO: add a bullet to here to track so we can remove it once it hits (call this.game)
     this.sendFire(data);
   }
 
 	sendFire(data) {
-    const buffer = msgpack.encode(data);
+    const buffer = encode(EVENTS.fire, data);
 		this.io.emit(EVENTS.fire, buffer);
 	}
 

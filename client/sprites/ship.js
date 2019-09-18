@@ -1,20 +1,21 @@
-import { SHIP_PROPS, GAME } from '/helpers/index.js';
+import { SHIP_PROPS, GAME } from '../../helpers/index.js';
 import { explosion } from './explosion.js';
+// import Phaser from 'phaser';
 
 Math.radians = function (degrees) {
 	return degrees * Math.PI / 180; // Converts from degrees to radians
 };
 
-const ff = 45;
+const FOURTY_FIVE = 45;
 const directionAngles = {
-	"0W": -ff * 4,
-	"NW": -ff * 3,
-	"N0": -ff * 2,
-	"NE": -ff,
+	"0W": -FOURTY_FIVE * 4,
+	"NW": -FOURTY_FIVE * 3,
+	"N0": -FOURTY_FIVE * 2,
+	"NE": -FOURTY_FIVE,
 	"0E": 0,
-	"SE": ff,
-	"S0": ff * 2,
-	"SW": ff * 3,
+	"SE": FOURTY_FIVE,
+	"S0": FOURTY_FIVE * 2,
+	"SW": FOURTY_FIVE * 3,
 	"00": 0
 }
 
@@ -22,16 +23,16 @@ const directionAngles = {
  * @class Ship @extends Phaser.Sprite
  */
 const Ship = function (app, game, data, isSelf = false) {
-	Phaser.Sprite.call(this, game, data.p.x, data.p.y, 'imgShip');
+	Phaser.Sprite.call(this, game, data.position.x, data.position.y, 'imgShip'); // TODO: Phaser 3 Phaser.GameObjects.Sprite
 	this.app = app;
 	this.game = game;
 
-	this.userID = data.i;
-	this.name = data.n;
-	this.keys = data.k;
-	this.team = data.t;
-	this.angle = data.p.a;
-	this.score = data.s;
+	this.userID = data.userID;
+	this.name = data.name;
+	this.keys = data.keys;
+	this.team = data.team;
+	this.angle = data.position.a;
+	this.score = data.score;
 	this.isSelf = isSelf;
 
 	this.anchor.set(0.5, 0.5);
@@ -70,13 +71,13 @@ Ship.prototype.update = function () {
 	let velocity = 0;
 	let x = '0', y = '0';
 
-	if (this.keys.l !== this.keys.r) {
-		x = (this.keys.l) ? 'W' : 'E';
+	if (this.keys.left !== this.keys.right) {
+		x = (this.keys.left) ? 'W' : 'E';
 		velocity = SHIP_PROPS.VELOCITY;
 	}
 
-	if (this.keys.u !== this.keys.d) {
-		y = (this.keys.u) ? 'N' : 'S';
+	if (this.keys.up !== this.keys.down) {
+		y = (this.keys.up) ? 'N' : 'S';
 		velocity = SHIP_PROPS.VELOCITY;
 	}
 
@@ -104,21 +105,20 @@ Ship.prototype.death = function () {
 
 Ship.prototype.getState = function () {
 	return {
-		i: this.userID,
-		n: this.name,
-		t: this.team,
-		s: this.score,
-		p: {
+		userID: this.userID,
+		name: this.name,
+		team: this.team,
+		score: this.score,
+		position: {
 			x: this.x,
 			y: this.y,
 			a: this.angle
 		},
-		v: { // velocity
+		velocity: {
 			x: this.body.velocity.x,
 			y: this.body.velocity.y,
 		},
-		h: 100, // health this.health (Health is a Phaser property)
-		k: this.keys
+		keys: this.keys
 	};
 }
 
@@ -131,8 +131,8 @@ Ship.prototype.angleChange = function (angle) {
 }
 
 // TODO: points should be a sum of kill count, the time it's been alive for, and the asteroids taken
-Ship.prototype.rewardPoints = function ({ s }) {
-	this.score += s;
+Ship.prototype.rewardPoints = function (pointsAwarded) {
+	this.score += pointsAwarded;
 }
 
 Ship.prototype.shouldDisplayText = function () {

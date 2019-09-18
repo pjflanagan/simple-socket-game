@@ -25,17 +25,17 @@ class Game {
 	}
 
 	hit(data) {
-		if (!!this.users[data.i]) {
+		if (!!this.users[data.target.userID]) {
 			// calc score
-			let score = Math.floor(this.users[data.i].score / 2);
-			data.l.s = (score > 1) ? score : 1;
+			let score = Math.floor(this.users[data.target.userID].score / 2);
+			data.origin.score = (score > 1) ? score : 1;
 
 			// remove the user from here
-			delete this.users[data.i]; // TODO: maybe should send the client and wait for a response to know they died
+			delete this.users[data.target.userID]; // TODO: maybe should send the client and wait for a response to know they died
 
 			// reward the player
-			if (!!this.users[data.l.i]) {
-				this.users[data.l.i].score += data.l.s;
+			if (!!this.users[data.origin.userID]) {
+				this.users[data.origin.userID].score += data.origin.score;
 			}
 
 			this.server.sendHit(data);
