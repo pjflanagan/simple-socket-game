@@ -1,32 +1,57 @@
 commands:
-  run-web: npm run build
-  run-server: node ./src/start.js
+  web: npm run build
 
 streams:
   watch-web:
     watch: { glob: "src/client/**/*.js" }
 
+  watch-helper:
+    watch: { glob: "src/helpers/**/*.js" }
+
+  server:
+    shell:
+      cmd: node ./src/start.js
+
+  watch-server:
+    watch: { glob: "src/server/**/*.js" }
+
 workflows:
-  initial:
+  initial-web:
     match: SYSTEM:started
-    parallel: 
-      - command: run-web
-      - command: run-server
+    serial:
+      - command: web
+
+  initial-server:
+    match: SYSTEM:started
+    restart: run-server
 
   rebuild-web:
     match: watch-web:.*
     serial:
       - wait: 1000
-      - command: run-web
+      - command: web
+
+  rebuild-helpers:
+    match: watch-helper:.*
+    serial:
+      - wait: 1000
+      - command: web
+      - restart: server
+
+  restart-server:
+    match: watch-server:.*
+    serial:
+      - wait: 1000
+      - restart: server
 
 dashboards:
   main:
     - log:
         position: quadrant/left
         title: Webpack
-        filter: command:run-web:.*
+        filter: command:web:.*
         gauge:
-          filter: command:run-web:state:.*
+          filter: command:web:state:.*
           scan:
             when:
               - pattern: started
@@ -43,15 +68,18 @@ dashboards:
     - log:
         position: quadrant/right
         title: Server
-        filter: command:run-server:.*
+        filter: stream:server:.*
         gauge:
-          filter: command:run-server:state:.*
+          filter: stream:server:shell:node ./src/start.js:.*
           scan:
             when:
-              - pattern: started
+              - pattern: state:started
                 text: Running
                 level: success
-              - pattern: exited with
+              - pattern: state:exited with 0
+                text: Running
+                level: success
+              - pattern: state:exited with
                 text: Failed
                 level: error
             default:

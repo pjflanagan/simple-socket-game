@@ -10,12 +10,12 @@ const EXPLOSION_PROPS = {
 /**
  * @class Debris @extends Phaser.Sprite
  */
-const Debris = function (game, data) {
-	Phaser.Sprite.call(this, game, data.position.x, data.position.y, 'imgDebris');
+const Debris = function (game, {x, y}) {
+	Phaser.Sprite.call(this, game, x, y, 'imgDebris');
 
 	this.anchor.set(.5, .5);
 	this.lifespan = EXPLOSION_PROPS.lifespan();
-	this.reset(data.position.x, data.position.y);
+	this.reset(x, y);
 
 	this.animations.add('fire', [0, 1, 2]);
 	this.animations.play('fire', 8, true);
@@ -31,10 +31,10 @@ const Debris = function (game, data) {
 Debris.prototype = Object.create(Phaser.Sprite.prototype);
 Debris.prototype.constructor = Debris;
 
-export const explosion = function (game, data) {
+export const explosion = function (game, position) {
 	const DebrisGroup = game.add.group();
 	const count = EXPLOSION_PROPS.count();
 	for (let i = 0; i < count; ++i) {
-		DebrisGroup.add(new Debris(game, data));
+		DebrisGroup.add(new Debris(game, position));
 	}
 };

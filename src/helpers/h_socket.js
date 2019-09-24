@@ -1,64 +1,67 @@
 
 import * as msgpack from 'msgpack-lite'
 
+const keys = {
+  up: 'ka',
+  down: 'kb',
+  left: 'kl',
+  right: 'kr'
+}
+
+const position = {
+  x: 'px',
+  y: 'py',
+  a: 'pa'
+};
+
 const state = {
-  userID: 'q',
-  name: 'r',
-  team: 's',
-  score: 't',
-  position: {
-    x: 'u',
-    y: 'v',
-    a: 'w'
-  },
+  userID: 'su',
+  name: 'sn',
+  team: 'st',
+  score: 'ss',
+  position,
   velocity: {
-    x: 'x',
-    y: 'y',
+    x: 'vx',
+    y: 'vy',
   },
-  keys: 'z'
+  keys
 };
 
 const MODEL = {
   addSelf: state,
   addNewUser: state, // same as addSelf
 	shareSelf: {
-    to: 'a',
+    to: 't',
     user: state
   },
   addUser: state,
   removeUser: {},
 
   keyChange: {
-    up: 'a',
-    down: 'b',
-    left: 'c',
-    right: 'd'
+    userID: 'u',
+    keys
   },
 
 	angleChange: {
-    userID: 'a',
-    angle: 'b'
+    userID: 'u',
+    angle: 'a'
   },
 
   fire: {
-    userID: 'a',
-    team: 'b',
-    position: {
-      x: 'c',
-      y: 'd',
-      a: 'e'
-    }
+    userID: 'u',
+    team: 't',
+    position
   },
 
   hit: {
     origin: {
-      userID: 'a',
-      team: 'b',
-      pointsAwarded: 'c'
+      userID: 'ou',
+      team: 'ot',
+      pointsAwarded: 'op'
     },
     target: {
-      userID: 'd',
-      team: 'e'
+      userID: 'tu',
+      team: 'tt'
     }
   }
 };

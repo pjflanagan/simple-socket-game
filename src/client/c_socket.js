@@ -20,7 +20,7 @@ class ClientSocket {
 		this.socket.on(EVENTS.keyChange, (buffer) => self.recvKeyChange(buffer));
 		this.socket.on(EVENTS.angleChange, (buffer) => self.recvAngleChange(buffer));
 		this.socket.on(EVENTS.fire, (buffer) => self.recvFire(buffer));
-		this.socket.on(EVENTS.hit, (buffer) => self.recvLaserHit(buffer));
+		this.socket.on(EVENTS.hit, (buffer) => self.recvHit(buffer));
   }
 
 	// Admin
@@ -48,7 +48,7 @@ class ClientSocket {
 	sendShareSelf(toUserID) {
     // if(!this.app.isAlive()) return;
     
-    const buffer = encode({
+    const buffer = encode(EVENTS.shareSelf, {
 			to: toUserID,
 			user: this.app.getUserState()
 		});
@@ -58,7 +58,7 @@ class ClientSocket {
 	// Key
 
 	sendKeyChange(data) {
-    const buffer = encode(data);
+    const buffer = encode(EVENTS.keyChange, data);
 		this.socket.emit(EVENTS.keyChange, buffer);
 	}
 
@@ -93,14 +93,14 @@ class ClientSocket {
 
 	// Hit
 
-	sendLaserHit(data) {
+	sendHit(data) {
     const buffer = encode(EVENTS.hit, data);
 		this.socket.emit(EVENTS.hit, buffer);
 	}
 
-	recvLaserHit(buffer) {
+	recvHit(buffer) {
     const data = decode(EVENTS.hit, buffer);
-		this.app.recvLaserHit(data);
+		this.app.recvHit(data);
 	}
 
 }

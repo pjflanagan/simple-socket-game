@@ -27,6 +27,7 @@ var Laser = function (app, game, data) {
 Laser.prototype = Object.create(Phaser.Sprite.prototype);
 Laser.prototype.constructor = Laser;
 
+// TODO: ???
 Laser.prototype.hit = function () {
 	// sendHit
 	this.kill();

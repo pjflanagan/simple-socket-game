@@ -80,10 +80,10 @@ App.Main.prototype = {
 			ship.update();
 		});
 		this.player.input(this.self, this.game, {
-			r: this.keyRight.isDown,
-			l: this.keyLeft.isDown,
-			u: this.keyUp.isDown,
-			d: this.keyDown.isDown
+			right: this.keyRight.isDown,
+			left: this.keyLeft.isDown,
+			up: this.keyUp.isDown,
+			down: this.keyDown.isDown
 		});
 		this.game.physics.arcade.overlap(this.PlayerLaserGroup, this.ShipGroup, this.laserHit, null, this);
 	},
@@ -125,7 +125,7 @@ App.Main.prototype = {
 
 	laserHit: function (laser, ship) {
 		if (laser.team !== ship.team) {
-			this.sendLaserHit(laser, ship);
+			this.sendHit(laser, ship);
 		}
 	},
 
@@ -163,8 +163,8 @@ App.Main.prototype = {
 
 	sendKeyChange: function () {
 		this.socket.sendKeyChange({
-			i: this.self.userID,
-			k: this.player.keys
+			userID: this.self.userID,
+			keys: this.player.keys
 		});
 	},
 
@@ -197,9 +197,9 @@ App.Main.prototype = {
 
 	sendFire: function ({ x, y }) {
 		this.socket.sendFire({
-			i: this.self.userID,
-			t: this.self.team,
-			p: {
+			userID: this.self.userID,
+			team: this.self.team,
+			position: {
 				x,
 				y,
 				a: this.player.angle - 3 * Math.PI / 4
@@ -221,8 +221,8 @@ App.Main.prototype = {
 
 	// HIT
 
-	sendLaserHit: function (laser, ship) {
-		this.socket.sendLaserHit({
+	sendHit: function (laser, ship) {
+		this.socket.sendHit({
       target: {
         userID: ship.userID,
         team: ship.team,
@@ -234,7 +234,7 @@ App.Main.prototype = {
 		})
 	},
 
-	recvLaserHit: function ({origin, target}) {
+	recvHit: function ({ origin, target }) {
 		const playerUserID = this.self.userID;
     const leave = () => { this.leave(this.self.name, this.self.score); }
 
