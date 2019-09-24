@@ -1,5 +1,5 @@
 import { Game } from './s_game.js';
-import { EVENTS, encode, decode } from '../helpers/index.js';
+import { EVENTS, fp } from '../helpers/index.js';
 
 // https://socket.io/docs/emit-cheatsheet/
 
@@ -30,7 +30,7 @@ class ServerSocket {
 	}
 
 	sendConnection(socket, data) {
-    const buffer = encode(EVENTS.addSelf, data);
+    const buffer = fp.encode(EVENTS.addSelf, data);
 		socket.broadcast.emit(EVENTS.addNewUser, buffer);
 		this.io.to(`${data.userID}`).emit(EVENTS.addSelf, buffer);
 	}
@@ -45,20 +45,20 @@ class ServerSocket {
   }
 
   fwdShareSelf(socket, buffer) {
-    const data = decode(EVENTS.shareSelf, buffer);
-    const replyBuff = encode(EVENTS.addUser, data.user);
+    const data = fp.decode(EVENTS.shareSelf, buffer);
+    const replyBuff = fp.encode(EVENTS.addUser, data.user);
 		socket.to(`${data.to}`).emit(EVENTS.addUser, replyBuff);
 	}
   
   // HIT
 
 	recvHit(buffer) {
-    const data = decode(EVENTS.hit, buffer);
+    const data = fp.decode(EVENTS.hit, buffer);
 		this.game.hit(data);
 	}
 
 	sendHit(data) {
-    const buffer = encode(EVENTS.hit, data);
+    const buffer = fp.encode(EVENTS.hit, data);
 		this.io.emit(EVENTS.hit, buffer);
 	}
 
@@ -77,7 +77,7 @@ class ServerSocket {
   // FIRE
   
   recvFire(buffer) {
-    const data = decode(EVENTS.fire, buffer);
+    const data = fp.decode(EVENTS.fire, buffer);
     // TODO: add a bullet to here to track so we can remove it once it hits (call this.game)
     // also so we can add it to the game later, perhaps they should have an initial time
     // so it's new position can just be extrapolated
@@ -86,7 +86,7 @@ class ServerSocket {
   }
 
 	sendFire(data) {
-    const buffer = encode(EVENTS.fire, data);
+    const buffer = fp.encode(EVENTS.fire, data);
 		this.io.emit(EVENTS.fire, buffer);
 	}
 

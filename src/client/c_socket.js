@@ -1,4 +1,4 @@
-import { EVENTS, encode, decode } from '../helpers/index.js';
+import { EVENTS, fp } from '../helpers/index.js';
 import io from 'socket.io-client';
 
 class ClientSocket {
@@ -26,12 +26,12 @@ class ClientSocket {
 	// Admin
 
 	recvAddSelf(buffer) {
-    const data = decode(EVENTS.addSelf, buffer);
+    const data = fp.decode(EVENTS.addSelf, buffer);
 		this.app.recvAddSelf(data);
 	}
 
 	recvAddUser(buffer) {
-    const data = decode(EVENTS.addUser, buffer);
+    const data = fp.decode(EVENTS.addUser, buffer);
 		this.app.recvAddUser(data);
   }
 
@@ -40,7 +40,7 @@ class ClientSocket {
   }
 
   recvAddNewUser(buffer) {
-    const data = decode(EVENTS.addNewUser, buffer);
+    const data = fp.decode(EVENTS.addNewUser, buffer);
     this.app.recvAddUser(data);
 		this.sendShareSelf(data.userID);
   }
@@ -48,7 +48,7 @@ class ClientSocket {
 	sendShareSelf(toUserID) {
     // if(!this.app.isAlive()) return;
     
-    const buffer = encode(EVENTS.shareSelf, {
+    const buffer = fp.encode(EVENTS.shareSelf, {
 			to: toUserID,
 			user: this.app.getUserState()
 		});
@@ -58,48 +58,48 @@ class ClientSocket {
 	// Key
 
 	sendKeyChange(data) {
-    const buffer = encode(EVENTS.keyChange, data);
+    const buffer = fp.encode(EVENTS.keyChange, data);
 		this.socket.emit(EVENTS.keyChange, buffer);
 	}
 
 	recvKeyChange(buffer) {
-    const data = decode(EVENTS.keyChange, buffer); // NOTE: either new Uint8Array(buffer) or buffer.data
+    const data = fp.decode(EVENTS.keyChange, buffer); // NOTE: either new Uint8Array(buffer) or buffer.data
 		this.app.recvKeyChange(data);
 	}
 
 	// Angle
 
 	sendAngleChange(data) {
-    const buffer = encode(EVENTS.angleChange, data);
+    const buffer = fp.encode(EVENTS.angleChange, data);
 		this.socket.emit(EVENTS.angleChange, buffer);
 	}
 
 	recvAngleChange(buffer) {
-    const data = decode(EVENTS.angleChange, buffer);
+    const data = fp.decode(EVENTS.angleChange, buffer);
 		this.app.recvAngleChange(data);
 	}
 
 	// Laser
 
 	sendFire(data) {
-    const buffer = encode(EVENTS.fire, data);
+    const buffer = fp.encode(EVENTS.fire, data);
 		this.socket.emit(EVENTS.fire, buffer);
 	}
 
 	recvFire(buffer) {
-    const data = decode(EVENTS.fire, buffer);
+    const data = fp.decode(EVENTS.fire, buffer);
 		this.app.recvFire(data);
 	}
 
 	// Hit
 
 	sendHit(data) {
-    const buffer = encode(EVENTS.hit, data);
+    const buffer = fp.encode(EVENTS.hit, data);
 		this.socket.emit(EVENTS.hit, buffer);
 	}
 
 	recvHit(buffer) {
-    const data = decode(EVENTS.hit, buffer);
+    const data = fp.decode(EVENTS.hit, buffer);
 		this.app.recvHit(data);
 	}
 

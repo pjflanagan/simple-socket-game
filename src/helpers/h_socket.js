@@ -1,125 +1,67 @@
-
-import * as msgpack from 'msgpack-lite'
+import { Flatpack } from './flatpack.js';
 
 const keys = {
-  up: 'ka',
-  down: 'kb',
-  left: 'kl',
-  right: 'kr'
+  up: '',
+  down: '',
+  left: '',
+  right: ''
 }
 
 const position = {
-  x: 'px',
-  y: 'py',
-  a: 'pa'
+  x: '',
+  y: '',
+  a: ''
 };
 
 const state = {
-  userID: 'su',
-  name: 'sn',
-  team: 'st',
-  score: 'ss',
+  userID: '',
+  name: '',
+  team: '',
+  score: '',
   position,
   velocity: {
-    x: 'vx',
-    y: 'vy',
+    x: '',
+    y: '',
   },
   keys
 };
 
-const MODEL = {
-  addSelf: state,
-  addNewUser: state, // same as addSelf
-	shareSelf: {
-    to: 't',
-    user: state
-  },
-  addUser: state,
-  removeUser: {},
+const fp = new Flatpack();
+fp.add('addSelf', state);
+fp.add('addNewUser', state);
+fp.add('shareSelf', {
+  to: '',
+  user: state
+});
+fp.add('addUser', state);
 
-  keyChange: {
-    userID: 'u',
-    keys
+fp.add('keyChange', {
+  userID: '',
+  keys
+});
+fp.add('angleChange', {
+  userID: '',
+  angle: ''
+});
+fp.add('fire', {
+  userID: '',
+  team: '',
+  position
+});
+fp.add('hit', {
+  origin: {
+    userID: '',
+    team: '',
+    pointsAwarded: ''
   },
-
-	angleChange: {
-    userID: 'u',
-    angle: 'a'
-  },
-
-  fire: {
-    userID: 'u',
-    team: 't',
-    position
-  },
-
-  hit: {
-    origin: {
-      userID: 'ou',
-      team: 'ot',
-      pointsAwarded: 'op'
-    },
-    target: {
-      userID: 'tu',
-      team: 'tt'
-    }
+  target: {
+    userID: '',
+    team: ''
   }
-};
+});
 
-const EVENTS = {
-	connection: 'connection',
-	disconnect: 'disconnect',
-};
+const EVENTS = fp.list();
+EVENTS.connection = 'connection';
+EVENTS.disconnect = 'disconnect';
 
-const EVENT_MODELS = [];
-
-let i = 0;
-for (const [key, value] of Object.entries(MODEL)) {
-  EVENTS[key] = i++;
-  EVENT_MODELS.push(MODEL[key]);
-}
-
-// PACK AND ENCODE
-
-const pack = function(data, model) {
-  const packet = {};
-  for (const [key, value] of Object.entries(data)) {
-    if (value instanceof Object) {
-      const subModel = model[key];
-      const subPacket = pack(value, subModel);
-      for (const [key, value] of Object.entries(subPacket)) {
-        packet[key] = value;
-      }
-    } else {
-      const modelValue = model[key];
-      packet[modelValue] = value;
-    }
-  }
-  return packet;
-}
-
-const unpack = function(packet, model) {
-  const data = {};
-  for (const [key, value] of Object.entries(model)) {
-    if (value instanceof Object) {
-      data[key] = unpack(packet, value);
-    } else {
-      data[key] = packet[value];
-    }
-  }
-  return data;
-}
-
-const encode = function(event, data) {
-  const packet = pack(data, EVENT_MODELS[event]);
-  return msgpack.encode(packet);
-}
-
-const decode = function(event, buffer) {
-  const packet = msgpack.decode(new Uint8Array(buffer));
-  return unpack(packet, EVENT_MODELS[event]);
-}
-
-// EXPORT
-
-export { EVENTS, encode, decode };
+export { fp, EVENTS };

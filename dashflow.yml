@@ -80,7 +80,7 @@ dashboards:
                 text: Running
                 level: success
               - pattern: state:exited with
-                text: Failed
+                text: Down
                 level: error
             default:
               text: Unknown
