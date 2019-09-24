@@ -10,9 +10,9 @@ export class Flatpack {
     this._savedData = 0;
   }
 
-  add(modelName, userModel) {
+  add(name, userModel) {
     const format = this._makeModel(userModel);
-    this._modelsEnum[modelName] = this._models.length;
+    this._modelsEnum[name] = this._models.length;
     this._models.push(format.model);
   }
 
@@ -20,8 +20,9 @@ export class Flatpack {
     return this._modelsEnum;
   }
 
-  encode(modelEnum, data){
-    const packet = this._pack(this._models[modelEnum], data);
+  encode(modelType, data){
+    const model = this._getModel(modelType);
+    const packet = this._pack(model, data);
     const buffer = msgpack.encode(packet);
     if (this._debug) {
       const originalLength = msgpack.encode(data).length;
@@ -32,9 +33,18 @@ export class Flatpack {
     return buffer;
   }
 
-  decode(modelEnum, buffer) {
+  decode(modelType, buffer) {
+    const model = this._getModel(modelType);
     const packet = msgpack.decode(new Uint8Array(buffer));
-    return this._unpack(this._models[modelEnum], packet);
+    return this._unpack(model, packet);
+  }
+
+  _getModel(modelType) {
+    if (typeof modelType === 'number') {
+      return this._models[modelType];
+    } else if (typeof modelType === 'string') {
+      return this._models[this._modelsEnum[modelType]];
+    }
   }
 
   _makeModel(userModel, count=0) {
