@@ -1,5 +1,6 @@
 commands:
   web: npm run build
+  test: npm run test
 
 streams:
   watch-web:

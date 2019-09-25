@@ -1,12 +1,13 @@
-const {Builder, By, Key, until} = require('selenium-webdriver');
+const { Builder } = require('selenium-webdriver');
+const { RandomPlayer } = require('./player.js');
  
-(async function example() {
-  let driver = await new Builder().forBrowser('safari').build();
+(async function main() {
+  const driver = await new Builder().forBrowser('safari').build();
+  const player = new RandomPlayer(driver, 'random');
   try {
-    await driver.get('http://www.google.com/ncr');
-    await driver.findElement(By.name('q')).sendKeys('webdriver', Key.RETURN);
-    await driver.wait(until.titleIs('webdriver - Google Search'), 1000);
+    await player.loadGame();
+    await player.play();
   } finally {
-    await driver.quit();
+    await player.quit();
   }
 })();
