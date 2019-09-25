@@ -10,7 +10,7 @@ streams:
 
   server:
     shell:
-      cmd: node ./src/start.js
+      cmd: npm start
 
   watch-server:
     watch: { glob: "src/server/**/*.js" }
@@ -58,7 +58,7 @@ dashboards:
                 text: Running
                 level: warning
               - pattern: exited with 0
-                text: Passed
+                text: Complete
                 level: success
               - pattern: exited with
                 text: Failed
@@ -70,7 +70,7 @@ dashboards:
         title: Server
         filter: stream:server:.*
         gauge:
-          filter: stream:server:shell:node ./src/start.js:.*
+          filter: stream:server:shell:npm start:.*
           scan:
             when:
               - pattern: state:started

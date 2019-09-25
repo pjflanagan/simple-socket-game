@@ -1,6 +1,6 @@
 import { ClientSocket } from './c_socket.js';
 import { Ship, Laser } from './sprites/index.js';
-import { GAME } from '../helpers/index.js';
+import { GAME_PROPS } from '../helpers/index.js';
 import { Player } from './c_player.js';
 import { HUD } from './c_hud.js';
 // TODO: import Phaser from 'phaser';
@@ -56,8 +56,8 @@ App.Main.prototype = {
 	},
 
 	create: function () {
-		this.game.world.setBounds(0, 0, GAME.WORLD.WIDTH, GAME.WORLD.HEIGHT);
-		this.game.add.tileSprite(0, 0, GAME.WORLD.WIDTH, GAME.WORLD.HEIGHT, 'bg');
+		this.game.world.setBounds(0, 0, GAME_PROPS.WORLD.WIDTH, GAME_PROPS.WORLD.HEIGHT);
+		this.game.add.tileSprite(0, 0, GAME_PROPS.WORLD.WIDTH, GAME_PROPS.WORLD.HEIGHT, 'bg');
 		this.game.stage.disableVisibilityChange = true; // keep game running if it loses the focus
 		this.game.physics.startSystem(Phaser.Physics.ARCADE); // start the Phaser arcade physics engine
 
@@ -94,13 +94,13 @@ App.Main.prototype = {
 		const graphics = this.game.add.graphics(0, 0);
 		graphics.beginFill(0xFF0000);
 		graphics.alpha = 0.05;
-		graphics.drawRect(0, 0, GAME.WORLD.SAFE_ZONE_WIDTH, GAME.WORLD.HEIGHT);
+		graphics.drawRect(0, 0, GAME_PROPS.WORLD.SAFE_ZONE_WIDTH, GAME_PROPS.WORLD.HEIGHT);
 		graphics.endFill();
 		this.RedZone = this.game.add.sprite(0, 0, graphics.generateTexture());
 		this.RedZone.alpha = 0.05;
 		graphics.beginFill(0x0000FF);
 		graphics.alpha = 0.2;
-		graphics.drawRect(GAME.WORLD.WIDTH - GAME.WORLD.SAFE_ZONE_WIDTH, 0, GAME.WORLD.SAFE_ZONE_WIDTH, GAME.WORLD.HEIGHT);
+		graphics.drawRect(GAME_PROPS.WORLD.WIDTH - GAME_PROPS.WORLD.SAFE_ZONE_WIDTH, 0, GAME_PROPS.WORLD.SAFE_ZONE_WIDTH, GAME_PROPS.WORLD.HEIGHT);
 		graphics.endFill();
 		this.BlueZone = this.game.add.sprite(0, 0, graphics.generateTexture());
 		this.BlueZone.alpha = 0.2;

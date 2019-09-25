@@ -71,7 +71,7 @@ export class Flatpack {
   }
 
   _pack(model, data) {
-    const packet = {};
+    let packet = {};
     for (const [key, value] of Object.entries(data)) {
       if (value instanceof Object) {
         const subModel = model[key];
@@ -79,6 +79,7 @@ export class Flatpack {
         for (const [key, value] of Object.entries(subPacket)) {
           packet[key] = value;
         }
+        // packet = { ...packet, ...subPacket };
       } else {
         const modelValue = model[key];
         packet[modelValue] = value;

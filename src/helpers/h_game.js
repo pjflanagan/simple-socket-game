@@ -6,7 +6,7 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-export const GAME = {
+export const GAME_PROPS = {
 	MAX_SHIPS: 30,
 	WORLD: {
 		WIDTH: 1200, // 3000
@@ -32,9 +32,10 @@ export const SHIP_PROPS = {
 };
 
 export const defaultUserState = function (userID, name, team) {
-	const randomSafeZoneWidth = randomInt(20, GAME.WORLD.SAFE_ZONE_WIDTH - 120);
-	const x = (team === GAME.TEAM.RED) ? randomSafeZoneWidth : GAME.WORLD.WIDTH - GAME.WORLD.SAFE_ZONE_WIDTH + randomSafeZoneWidth;
+	const randomSafeZoneWidth = randomInt(20, GAME_PROPS.WORLD.SAFE_ZONE_WIDTH - 120);
+	const x = (team === GAME_PROPS.TEAM.RED) ? randomSafeZoneWidth : GAME_PROPS.WORLD.WIDTH - GAME_PROPS.WORLD.SAFE_ZONE_WIDTH + randomSafeZoneWidth;
 
+  // TODO: don't share the obvious defaults
 	return {
 		userID,
 		name,
@@ -42,14 +43,13 @@ export const defaultUserState = function (userID, name, team) {
 		score: 0,
 		position: {
 			x,
-			y: randomInt(200, GAME.WORLD.HEIGHT - 200),
-			a: Math.random() * 180 // angle
+			y: randomInt(200, GAME_PROPS.WORLD.HEIGHT - 200),
+			a: 0
 		},
 		velocity: {
 			x: 0,
 			y: 0,
 		},
-		// health: 100,
 		keys: {
 			up: false,
 			down: false,

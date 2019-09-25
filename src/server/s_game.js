@@ -1,5 +1,5 @@
 
-import { defaultUserState, GAME } from '../helpers'
+import { defaultUserState, GAME_PROPS } from '../helpers'
 
 
 class Game {
@@ -46,13 +46,13 @@ class Game {
 		let blue = 0;
 		let red = 0;
 		for (const [key, value] of Object.entries(this.users)) {
-			if (value.team === GAME.TEAM.RED) {
+			if (value.team === GAME_PROPS.TEAM.RED) {
 				++red;
 			} else {
 				++blue;
 			}
 		};
-		return (red <= blue) ? GAME.TEAM.RED : GAME.TEAM.BLUE;
+		return (red <= blue) ? GAME_PROPS.TEAM.RED : GAME_PROPS.TEAM.BLUE;
 	}
 }
 

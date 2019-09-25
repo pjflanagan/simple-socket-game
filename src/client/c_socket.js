@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 
 class ClientSocket {
 	constructor(app) {
-		const name = gup('name') || '';
+		const name = window.gup('name') || '';
 		this.socket = io({
 			query: {
 				name

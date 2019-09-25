@@ -1,4 +1,4 @@
-import { SHIP_PROPS, GAME } from '../../helpers/index.js';
+import { SHIP_PROPS, GAME_PROPS } from '../../helpers/index.js';
 import { explosion } from './explosion.js';
 // import Phaser from 'phaser';
 
@@ -37,7 +37,7 @@ const Ship = function (app, game, data, isSelf = false) {
 
 	this.anchor.set(0.5, 0.5);
 
-	if (this.team === GAME.TEAM.RED) {
+	if (this.team === GAME_PROPS.TEAM.RED) {
 		this.animations.add('red', [0]);
 		this.animations.play('red');
 	} else {

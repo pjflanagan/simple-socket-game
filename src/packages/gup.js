@@ -1,5 +1,5 @@
 // function for getting URL parameters
-const gup = function(name) {
+window.gup = function(name) {
   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
   var regexS = "[\\?&]"+name+"=([^&#]*)";
   var regex = new RegExp(regexS);

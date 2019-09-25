@@ -1,11 +1,11 @@
-import { LASER_PROPS, GAME } from '../../helpers/index.js';
+import { LASER_PROPS, GAME_PROPS } from '../../helpers/index.js';
 // import Phaser from 'phaser';
 
 /**
  * @class Laser @extends Phaser.Sprite
  */
 var Laser = function (app, game, data) {
-	const image = (data.team === GAME.TEAM.RED) ? 'imgRedLaser' : 'imgBlueLaser';
+	const image = (data.team === GAME_PROPS.TEAM.RED) ? 'imgRedLaser' : 'imgBlueLaser';
 	Phaser.Sprite.call(this, game, data.position.x, data.position.y, image);
 	this.app = app;
 	this.userID = data.userID;

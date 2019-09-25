@@ -77,15 +77,20 @@
 <script>
 	$(function () {
 		// score
-		const score = gup('score');
+		const score = window.gup('score');
 		const scoreText = (!!score) ? `Your score is ${score}. ` : '';
 		$('p.prompt').text(`${scoreText}Type name and press enter...`);
 
 		// name
-		let name = gup('name') || '';
+    let name = window.gup('name') || '';
+    const timeOfDeath = (name !== '') ? new Date().getTime() + 1000 * 3 : 0;
+    // TODO: if they're dead have a countdown timer before they can click restart
 		$('p.name').text(name);
 
 		$(document).on('keypress', function (e) {
+      if(name.length >= 10 || (timeOfDeath > new Date().getTime())) {
+        return;
+      }
 			var letter = String.fromCharCode(e.keyCode);
 			if (/[a-zA-Z0-9-_ ]/.test(letter)) {
 				name += letter;

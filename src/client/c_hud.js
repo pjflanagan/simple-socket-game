@@ -1,4 +1,4 @@
-import { GAME, LASER_PROPS } from '../helpers/index.js';
+import { GAME_PROPS, LASER_PROPS } from '../helpers/index.js';
 
 export class HUD {
 	constructor(app) {
@@ -12,7 +12,7 @@ export class HUD {
 		let red = 0
 		let blue = 0;
 		this.app.ShipGroup.forEach(ship => {
-			if (ship.team === GAME.TEAM.RED) {
+			if (ship.team === GAME_PROPS.TEAM.RED) {
 				red += ship.score;
 			} else {
 				blue += ship.score;

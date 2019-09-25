@@ -37,7 +37,8 @@ fp.add('addUser', state);
 
 fp.add('keyChange', {
   userID: '',
-  keys
+  keys,
+  position
 });
 fp.add('angleChange', {
   userID: '',
