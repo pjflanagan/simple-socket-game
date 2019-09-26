@@ -89,13 +89,14 @@ Ship.prototype.update = function () {
 	}
 }
 
-Ship.prototype.death = function () {
+Ship.prototype.death = function (angle) {
 	if (!!this.text) {
 		this.text.kill();
 	}
 	explosion(this.game, {
 		x: this.x,
-		y: this.y,
+    y: this.y,
+    a: angle
 	})
 	this.kill();
 	this.app.removeShip(this);

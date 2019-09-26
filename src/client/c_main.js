@@ -225,7 +225,8 @@ App.Main.prototype = {
 		this.socket.sendHit({
 			target: {
 				userID: ship.userID,
-				team: ship.team,
+        team: ship.team,
+        angle: laser.angle
 			},
 			origin: {
 				userID: laser.userID,
@@ -240,7 +241,7 @@ App.Main.prototype = {
 
 		this.ShipGroup.forEach(function (ship) {
 			if (ship.userID === target.userID) {
-				ship.death();
+				ship.death(target.angle);
 				if (playerUserID === target.userID) {
 					leave();
 				}

@@ -3,8 +3,8 @@ import { defaultUserState, GAME_PROPS } from '../helpers'
 
 
 class Game {
-	constructor(server) {
-		this.server = server;
+	constructor(socket) {
+		this.socket = socket;
 		this.users = {};
 	}
 
@@ -14,13 +14,13 @@ class Game {
 			score: 0,
 			team: userState.team
 		};
-		this.server.sendConnection(socket, userState);
+		this.socket.sendConnection(socket, userState);
 	}
 
 	disconnect(socket) {
 		if (!!this.users[socket.id]) {
 			delete this.users[socket.id];
-			this.server.sendRemoveUser(socket);
+			this.socket.sendRemoveUser(socket.id);
 		}
 	}
 
@@ -38,7 +38,7 @@ class Game {
 				this.users[data.origin.userID].score += data.origin.pointsAwarded;
 			}
 
-			this.server.sendHit(data);
+			this.socket.sendHit(data);
 		}
 	}
 

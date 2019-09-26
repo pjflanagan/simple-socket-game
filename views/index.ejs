@@ -85,7 +85,7 @@
     let name = window.gup('name') || '';
 		$('p.name').text(name);
 
-		$(document).on('keydown', function (e) {
+		$(document).on('keypress', function (e) {
 			var letter = String.fromCharCode(e.keyCode);
 			if (/[a-zA-Z0-9-_ ]/.test(letter)) {
 				name += letter;

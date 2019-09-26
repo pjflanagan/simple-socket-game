@@ -40,8 +40,8 @@ class ServerSocket {
 		this.game.disconnect(socket);
 	}
 
-	sendRemoveUser(socket) {
-		this.io.emit(EVENTS.removeUser, socket.id);
+	sendRemoveUser(userID) {
+		this.io.emit(EVENTS.removeUser, userID);
   }
 
   fwdShareSelf(socket, buffer) {

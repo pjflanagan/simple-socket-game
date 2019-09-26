@@ -25,13 +25,14 @@ class Player {
 
 class RandomPlayer extends Player {
 	async play() {
+    await this.driver.sleep(2000);
 		while (true) {
 			let el = this.driver.findElement(By.tagName('canvas'));
 			let actions = this.driver.actions();
 			await actions.move({
 				origin: el,
-				x: 100,
-				y: 10
+				// x: 100,
+				// y: 10
 			})
 				.press()
 				.release()

@@ -57,12 +57,14 @@ fp.add('hit', {
 	},
 	target: {
 		userID: '',
-		team: ''
+    team: '',
+    angle: ''
 	}
 });
 
 const EVENTS = fp.list();
 EVENTS.connection = 'connection';
 EVENTS.disconnect = 'disconnect';
+EVENTS.removeUser = 'leave';
 
 export { fp, EVENTS };
