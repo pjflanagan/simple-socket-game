@@ -1,64 +1,64 @@
 import { Flatpack } from './flatpack.js';
 
 const keys = {
-  up: '',
-  down: '',
-  left: '',
-  right: ''
+	up: '',
+	down: '',
+	left: '',
+	right: ''
 }
 
 const position = {
-  x: '',
-  y: '',
-  a: ''
+	x: '',
+	y: '',
+	a: ''
 };
 
 const state = {
-  userID: '',
-  name: '',
-  team: '',
-  score: '',
-  position,
-  velocity: {
-    x: '',
-    y: '',
-  },
-  keys
+	userID: '',
+	name: '',
+	team: '',
+	score: '',
+	position,
+	velocity: {
+		x: '',
+		y: '',
+	},
+	keys
 };
 
 const fp = new Flatpack();
 fp.add('addSelf', state);
 fp.add('addNewUser', state);
 fp.add('shareSelf', {
-  to: '',
-  user: state
+	to: '',
+	user: state
 });
 fp.add('addUser', state);
 
 fp.add('keyChange', {
-  userID: '',
-  keys,
-  position
+	userID: '',
+	keys,
+	position
 });
 fp.add('angleChange', {
-  userID: '',
-  angle: ''
+	userID: '',
+	angle: ''
 });
 fp.add('fire', {
-  userID: '',
-  team: '',
-  position
+	userID: '',
+	team: '',
+	position
 });
 fp.add('hit', {
-  origin: {
-    userID: '',
-    team: '',
-    pointsAwarded: ''
-  },
-  target: {
-    userID: '',
-    team: ''
-  }
+	origin: {
+		userID: '',
+		team: '',
+		pointsAwarded: ''
+	},
+	target: {
+		userID: '',
+		team: ''
+	}
 });
 
 const EVENTS = fp.list();

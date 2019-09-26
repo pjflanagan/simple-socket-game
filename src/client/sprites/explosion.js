@@ -10,7 +10,7 @@ const EXPLOSION_PROPS = {
 /**
  * @class Debris @extends Phaser.Sprite
  */
-const Debris = function (game, {x, y}) {
+const Debris = function (game, { x, y }) {
 	Phaser.Sprite.call(this, game, x, y, 'imgDebris');
 
 	this.anchor.set(.5, .5);

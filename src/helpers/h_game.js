@@ -35,7 +35,7 @@ export const defaultUserState = function (userID, name, team) {
 	const randomSafeZoneWidth = randomInt(20, GAME_PROPS.WORLD.SAFE_ZONE_WIDTH - 120);
 	const x = (team === GAME_PROPS.TEAM.RED) ? randomSafeZoneWidth : GAME_PROPS.WORLD.WIDTH - GAME_PROPS.WORLD.SAFE_ZONE_WIDTH + randomSafeZoneWidth;
 
-  // TODO: don't share the obvious defaults
+	// TODO: don't share the obvious defaults
 	return {
 		userID,
 		name,

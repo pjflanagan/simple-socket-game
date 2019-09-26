@@ -10,7 +10,7 @@ import { HUD } from './c_hud.js';
  */
 window.onload = function () {
 	let W = $(window).width();
-  let H = $(window).height();
+	let H = $(window).height();
 	const game = new Phaser.Game(W, H, Phaser.CANVAS, 'game');
 	game.state.add('Main', App.Main);
 	game.state.start('Main');
@@ -223,10 +223,10 @@ App.Main.prototype = {
 
 	sendHit: function (laser, ship) {
 		this.socket.sendHit({
-      target: {
-        userID: ship.userID,
-        team: ship.team,
-      },
+			target: {
+				userID: ship.userID,
+				team: ship.team,
+			},
 			origin: {
 				userID: laser.userID,
 				team: laser.team
@@ -236,7 +236,7 @@ App.Main.prototype = {
 
 	recvHit: function ({ origin, target }) {
 		const playerUserID = this.self.userID;
-    const leave = () => { this.leave(this.self.name, this.self.score); }
+		const leave = () => { this.leave(this.self.name, this.self.score); }
 
 		this.ShipGroup.forEach(function (ship) {
 			if (ship.userID === target.userID) {

@@ -29,7 +29,7 @@ const Ship = function (app, game, data, isSelf = false) {
 
 	this.userID = data.userID;
 	this.name = data.name;
-  this.keys = data.keys;
+	this.keys = data.keys;
 	this.team = data.team;
 	this.angle = data.position.a;
 	this.score = data.score;
