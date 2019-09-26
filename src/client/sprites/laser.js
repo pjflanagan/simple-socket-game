@@ -1,5 +1,5 @@
 import { LASER_PROPS, GAME_PROPS } from '../../helpers/index.js';
-// import Phaser from 'phaser';
+// import Phaser from 'phaser'; TODO: upgrade to Phaser 3 or use Phaser 2 in node_modules
 
 /**
  * @class Laser @extends Phaser.Sprite

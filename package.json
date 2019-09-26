@@ -1,7 +1,7 @@
 {
 	"name": "simple-socket-game",
 	"version": "0.0.1",
-	"description": "Oh snap!",
+	"description": "Simple socket game, to experiment with developing a io game framework",
 	"engines": {
 		"node": "8.11.3"
 	},
@@ -18,7 +18,7 @@
 		"express": "^4.17.1",
 		"msgpack-lite": "^0.1.26",
 		"path": "^0.12.7",
-		"phaser": "^3.19.0",
+    "phaser": "^2.4.6",
 		"socket.io": "^2.3.0"
 	},
 	"devDependencies": {
