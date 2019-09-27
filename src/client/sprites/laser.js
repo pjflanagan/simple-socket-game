@@ -1,4 +1,5 @@
 import { LASER_PROPS, GAME_PROPS } from '../../helpers/index.js';
+import { explosion } from './explosion.js';
 // import Phaser from 'phaser'; TODO: upgrade to Phaser 3 or use Phaser 2 in node_modules
 
 /**
@@ -28,7 +29,25 @@ var Laser = function (app, game, data) {
 Laser.prototype = Object.create(Phaser.Sprite.prototype);
 Laser.prototype.constructor = Laser;
 
-// TODO: ???
+Laser.prototype.update = function () {
+  if (this.team === GAME_PROPS.TEAM.RED && this.body.x >= (GAME_PROPS.WORLD.WIDTH - GAME_PROPS.WORLD.SAFE_ZONE_WIDTH)) {
+    explosion(this.game, {
+      x: this.body.x,
+      y: this.body.y,
+      a: Math.PI - this.angle
+    });
+    this.destroy();
+  } else if (this.team === GAME_PROPS.TEAM.BLUE && this.body.x <= GAME_PROPS.WORLD.SAFE_ZONE_WIDTH) {
+    explosion(this.game, {
+      x: this.body.x,
+      y: this.body.y,
+      a: Math.PI - this.angle
+    });
+    this.destroy();
+  }
+}
+
+// TODO: ???d
 Laser.prototype.hit = function () {
 	// sendHit
 	this.kill();

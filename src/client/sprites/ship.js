@@ -97,7 +97,7 @@ Ship.prototype.death = function (angle) {
 		x: this.x,
     y: this.y,
     a: angle
-	})
+	});
 	this.kill();
 	this.app.removeShip(this);
 };

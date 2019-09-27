@@ -64,7 +64,6 @@ App.Main.prototype = {
 		this.drawZones();
 
 		this.LaserGroup = this.game.add.group();
-		this.PlayerLaserGroup = this.game.add.group();
 		this.ShipGroup = this.game.add.group();
 
 		this.socket = new ClientSocket(this);
@@ -78,6 +77,9 @@ App.Main.prototype = {
 	update: function () {
 		this.ShipGroup.forEach(function (ship) {
 			ship.update();
+    });
+    this.LaserGroup.forEach(function (laser) {
+			laser.update();
 		});
 		this.player.input(this.self, this.game, {
 			right: this.keyRight.isDown,
@@ -85,7 +87,7 @@ App.Main.prototype = {
 			up: this.keyUp.isDown,
 			down: this.keyDown.isDown
 		});
-		this.game.physics.arcade.overlap(this.PlayerLaserGroup, this.ShipGroup, this.laserHit, null, this);
+		this.game.physics.arcade.overlap(this.LaserGroup, this.ShipGroup, this.laserHit, null, this);
 	},
 
 	// GRAPHICS --------------------------------------------------------------------------------------
@@ -212,27 +214,26 @@ App.Main.prototype = {
 	},
 
 	recvFire: function (data) {
-		if (data.userID === this.self.userID) {
-			this.PlayerLaserGroup.add(new Laser(this, this.game, data));
-		} else {
-			this.LaserGroup.add(new Laser(this, this.game, data));
-		}
+		this.LaserGroup.add(new Laser(this, this.game, data));
 	},
 
 	// HIT
 
 	sendHit: function (laser, ship) {
-		this.socket.sendHit({
-			target: {
-				userID: ship.userID,
-        team: ship.team,
-        angle: laser.angle
-			},
-			origin: {
-				userID: laser.userID,
-				team: laser.team
-			}
-		})
+    // TODO: share if you are a host
+    if (this.self.userID === laser.userID) {
+      this.socket.sendHit({
+        target: {
+          userID: ship.userID,
+          team: ship.team,
+          angle: laser.angle
+        },
+        origin: {
+          userID: laser.userID,
+          team: laser.team
+        }
+      });
+    }
 	},
 
 	recvHit: function ({ origin, target }) {

@@ -3,7 +3,7 @@
 const EXPLOSION_PROPS = {
 	lifespan: () => (Math.random() * .5 + .5) * 500,
 	speed: () => (Math.random() * .5 + .5) * 360,
-  directedAngle: (a) => a + (Math.random() * .25) - 1,
+  directedAngle: (a) => a + Math.PI / 4 + (Math.random() * .5) - 1,
   undirectedAngle: () => Math.random() * Math.PI * 2,
 	count: () => Math.floor(Math.random() * 20) + 10
 }
@@ -25,8 +25,8 @@ const Debris = function (game, { x, y, a }) {
 	// enable physics on the laser
 	game.physics.enable(this, Phaser.Physics.ARCADE);
   const speed = EXPLOSION_PROPS.speed();
-	// const angle = (!!a) ? EXPLOSION_PROPS.directedAngle(a) : EXPLOSION_PROPS.undirectedAngle();
-  const angle = EXPLOSION_PROPS.undirectedAngle()
+	const angle = (!!a) ? EXPLOSION_PROPS.directedAngle(a) : EXPLOSION_PROPS.undirectedAngle();
+  // const angle = EXPLOSION_PROPS.undirectedAngle()
   game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
 };
 
