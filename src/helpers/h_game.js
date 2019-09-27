@@ -28,14 +28,16 @@ export const LASER_PROPS = {
 };
 
 export const SHIP_PROPS = {
-	VELOCITY: 240,
+  VELOCITY: 240,
+  DIAMETER: 100
 };
 
 export const defaultUserState = function (userID, name, team) {
-	const randomSafeZoneWidth = randomInt(20, GAME_PROPS.WORLD.SAFE_ZONE_WIDTH - 120);
-	const x = (team === GAME_PROPS.TEAM.RED) ? randomSafeZoneWidth : GAME_PROPS.WORLD.WIDTH - GAME_PROPS.WORLD.SAFE_ZONE_WIDTH + randomSafeZoneWidth;
+	const randomSafeZoneWidth = randomInt(SHIP_PROPS.DIAMETER, GAME_PROPS.WORLD.SAFE_ZONE_WIDTH - SHIP_PROPS.DIAMETER);
+  const x = (team === GAME_PROPS.TEAM.RED) ?
+    randomSafeZoneWidth :
+    GAME_PROPS.WORLD.WIDTH - GAME_PROPS.WORLD.SAFE_ZONE_WIDTH + randomSafeZoneWidth;
 
-	// TODO: don't share the obvious defaults
 	return {
 		userID,
 		name,
@@ -43,7 +45,7 @@ export const defaultUserState = function (userID, name, team) {
 		score: 0,
 		position: {
 			x,
-			y: randomInt(200, GAME_PROPS.WORLD.HEIGHT - 200),
+			y: randomInt(2 * SHIP_PROPS.DIAMETER, GAME_PROPS.WORLD.HEIGHT - (2 * SHIP_PROPS.DIAMETER)),
 			a: 0
 		},
 		velocity: {

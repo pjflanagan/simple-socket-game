@@ -61,7 +61,7 @@ class Player {
 		if (this.rounds === 0)
 			return;
 		this.rounds -= 1;
-		this.app.updateHUD();
+		this.app.updateHUD('laser');
 		this.reload();
 
 		let x = this.app.self.body.x + this.app.self.body.halfWidth;
@@ -74,7 +74,7 @@ class Player {
 			// this.clearTimeout(this.timeout)
 			this.timeout = setTimeout(() => {
 				this.rounds = LASER_PROPS.ROUNDS;
-				this.app.updateHUD();
+				this.app.updateHUD('laser');
 			}, LASER_PROPS.RELOAD_INTERVAL);
 		}
 	}

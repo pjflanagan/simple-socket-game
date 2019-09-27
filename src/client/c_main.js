@@ -1,6 +1,6 @@
 import { ClientSocket } from './c_socket.js';
 import { Ship, Laser } from './sprites/index.js';
-import { GAME_PROPS } from '../helpers/index.js';
+import { GAME_PROPS, SHIP_PROPS } from '../helpers/index.js';
 import { Player } from './c_player.js';
 import { HUD } from './c_hud.js';
 // TODO: import Phaser from 'phaser';
@@ -31,7 +31,7 @@ App.Main.prototype = {
 		this.game.load.spritesheet(
 			'imgShip',
 			'/assets/img_ship.png',
-			100, 100, 2
+			SHIP_PROPS.DIAMETER, SHIP_PROPS.DIAMETER, 2
 		);
 		this.game.load.spritesheet(
 			'imgRedLaser',
@@ -121,9 +121,17 @@ App.Main.prototype = {
 		return -1;
 	},
 
-	updateHUD() {
-		this.hud.update();
-	},
+	updateHUD(type) {
+    switch (type) {
+    case 'score': 
+      this.hud.updateScores();
+    case 'laser':
+      this.hud.updateLaser();
+    default:
+      this.hud.updateLaser();
+      this.hud.updateScores();
+    }
+	},  
 
 	laserHit: function (laser, ship) {
 		if (laser.team !== ship.team) {
@@ -141,12 +149,12 @@ App.Main.prototype = {
 		this.self = new Ship(this, this.game, data, true);
 		this.ShipGroup.add(this.self);
 		this.game.camera.follow(this.self);
-		this.updateHUD();
+		this.updateHUD('both');
 	},
 
 	recvAddUser: function (data) {
 		this.ShipGroup.add(new Ship(this, this.game, data));
-		this.updateHUD();
+		this.updateHUD('score');
 	},
 
 	recvRemoveUser: function (userID) {
@@ -154,7 +162,7 @@ App.Main.prototype = {
 			if (ship.userID === userID)
 				ship.death();
 		});
-		this.updateHUD();
+		this.updateHUD('score');
 	},
 
 	getUserState: function () {
@@ -166,7 +174,12 @@ App.Main.prototype = {
 	sendKeyChange: function () {
 		this.socket.sendKeyChange({
 			userID: this.self.userID,
-			keys: this.player.keys
+      keys: this.player.keys,
+      position: {
+        x: this.self.body.x,
+        y: this.self.body.y,
+        t: new Date().getTime()
+      }
 		});
 	},
 
@@ -204,7 +217,8 @@ App.Main.prototype = {
 			position: {
 				x,
 				y,
-				a: this.player.angle - 3 * Math.PI / 4
+        a: this.player.angle - 3 * Math.PI / 4,
+        t: new Date().getTime()
 			},
 			// v: {
 			//   x: this.self.body.velocity.x,
@@ -250,7 +264,7 @@ App.Main.prototype = {
 				ship.rewardPoints(origin.pointsAwarded);
 			}
 		});
-		this.updateHUD();
+		this.updateHUD('score');
 	},
 
 };

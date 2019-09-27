@@ -10,7 +10,8 @@ const keys = {
 const position = {
 	x: '',
 	y: '',
-	a: ''
+  a: '', // angle
+  t: '' // timestamp
 };
 
 const state = {
@@ -65,6 +66,6 @@ fp.add('hit', {
 const EVENTS = fp.list();
 EVENTS.connection = 'connection';
 EVENTS.disconnect = 'disconnect';
-EVENTS.removeUser = 'leave';
+EVENTS.removeUser = 'removeUser';
 
 export { fp, EVENTS };

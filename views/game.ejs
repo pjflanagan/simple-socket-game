@@ -42,6 +42,11 @@
 			margin-left: auto;
 		}
 
+    #hud .row {
+      display: flex;
+      width: 100%;
+    }
+
 		#hud #rounds {
 			width: 50%;
 			height: 12px;
@@ -60,6 +65,21 @@
 		#hud #rounds .round.blank {
 			background: #FFF2;
 		}
+
+    #hud #highscores {
+      width: 50%;
+      padding-right: 12px;
+    }
+
+    #hud #highscores p {
+      text-align: right;
+      width: 100%;
+      margin: 0;
+    }
+
+    #hud #highscores p.red { color: #f53b3b; }
+    #hud #highscores p.blue { color: #3a3ae4; }
+
 	</style>
 </head>
 
@@ -68,8 +88,11 @@
 		<div id="team-meters">
 			<div id="red"></div>
 			<div id="blue"></div>
-		</div>
-		<div id="rounds"></div>
+    </div>
+    <div class="row">
+      <div id="rounds"></div>
+      <div id="highscores"></div>
+    </div>
 	</div>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/phaser/2.4.6/phaser.min.js"></script>
 	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
