@@ -25,7 +25,15 @@ class Player {
 
 class RandomPlayer extends Player {
 	async play() {
-    await this.driver.sleep(2000);
+
+	}
+}
+
+// Constantly Shooting Player
+
+class ConstantlyShootingPlayer extends Player {
+	async play() {
+		await this.driver.sleep(1000);
 		while (true) {
 			let el = this.driver.findElement(By.tagName('canvas'));
 			let actions = this.driver.actions();
@@ -37,16 +45,8 @@ class RandomPlayer extends Player {
 				.press()
 				.release()
 				.perform();
-			await this.driver.sleep(1000);
+			await this.driver.sleep(10);
 		}
-	}
-}
-
-// Constantly Shooting Player
-
-class ConstantlyShootingPlayer extends Player {
-	async play() {
-
 	}
 }
 
