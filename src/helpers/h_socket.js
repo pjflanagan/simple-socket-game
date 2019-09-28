@@ -54,7 +54,7 @@ fp.add('hit', {
 	origin: {
 		userID: '',
 		team: '',
-		pointsAwarded: ''
+		newScore: ''
 	},
 	target: {
 		userID: '',

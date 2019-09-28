@@ -28,9 +28,11 @@ export class HUD {
         blue += ship.score;
         team = 'blue';
       }
+
+      const me = (ship.userID === this.app.self.userID) ? 'me' : '';
       
       if (i < 5) {
-        $('#hud #highscores').append(`<p class="${ team }">${ i } ${ ship.name } ${ ship.score }</p>`)
+        $('#hud #highscores').append(`<p class="${ team } ${ me }">${ i } ${ ship.name } ${ ship.score }</p>`)
       }
 
       ++i;

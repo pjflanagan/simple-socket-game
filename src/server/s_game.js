@@ -25,18 +25,16 @@ class Game {
 	}
 
 	hit(data) {
-		if (!!this.users[data.target.userID]) {
+    const originUser = this.users[data.origin.userID];
+    const targetUser = this.users[data.target.userID]
+		if (!!originUser && !!targetUser) {
 			// calc score
-			let pointsAwarded = Math.floor(this.users[data.target.userID].score / 2);
-			data.origin.pointsAwarded = (pointsAwarded > 1) ? pointsAwarded : 1;
+			let pointsAwarded = Math.floor(targetUser.score / 2);
+			data.origin.newScore = (pointsAwarded > 1) ? originUser.score + pointsAwarded : originUser.score + 1;
 
 			// remove the user from here
-			delete this.users[data.target.userID]; // TODO: maybe should send the client and wait for a response to know they died
-
-			// reward the player
-			if (!!this.users[data.origin.userID]) {
-				this.users[data.origin.userID].score += data.origin.pointsAwarded;
-			}
+			delete this.users[data.target.userID];
+			this.users[data.origin.userID].score = data.origin.newScore;
 
 			this.socket.sendHit(data);
 		}

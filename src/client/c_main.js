@@ -261,7 +261,7 @@ App.Main.prototype = {
 					leave();
 				}
 			} else if (ship.userID == origin.userID) {
-				ship.rewardPoints(origin.pointsAwarded);
+				ship.rewardPoints(origin.newScore);
 			}
 		});
 		this.updateHUD('score');

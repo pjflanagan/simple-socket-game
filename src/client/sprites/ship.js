@@ -130,8 +130,8 @@ Ship.prototype.angleChange = function (angle) {
 }
 
 // TODO: points should be a sum of kill count, the time it's been alive for, and the asteroids taken
-Ship.prototype.rewardPoints = function (pointsAwarded) {
-	this.score += pointsAwarded;
+Ship.prototype.rewardPoints = function (newScore) {
+	this.score = newScore;
 }
 
 Ship.prototype.shouldDisplayText = function () {
