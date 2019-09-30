@@ -10,8 +10,8 @@ const keys = {
 const position = {
 	x: '',
 	y: '',
-  a: '', // angle
-  t: '' // timestamp
+	a: '', // angle
+	t: '' // timestamp
 };
 
 const state = {
@@ -39,7 +39,10 @@ fp.add('addUser', state);
 fp.add('keyChange', {
 	userID: '',
 	keys,
-	position
+	to: {
+		x: '',
+		y: ''
+	}
 });
 fp.add('angleChange', {
 	userID: '',
@@ -58,8 +61,8 @@ fp.add('hit', {
 	},
 	target: {
 		userID: '',
-    team: '',
-    angle: ''
+		team: '',
+		angle: ''
 	}
 });
 

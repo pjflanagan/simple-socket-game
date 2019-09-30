@@ -63,7 +63,7 @@ class ClientSocket {
 	}
 
 	recvKeyChange(buffer) {
-    const data = fp.decode(EVENTS.keyChange, buffer);
+		const data = fp.decode(EVENTS.keyChange, buffer);
 		this.app.recvKeyChange(data);
 	}
 

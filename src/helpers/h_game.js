@@ -28,15 +28,15 @@ export const LASER_PROPS = {
 };
 
 export const SHIP_PROPS = {
-  VELOCITY: 240,
-  DIAMETER: 100
+	VELOCITY: 240,
+	DIAMETER: 100
 };
 
 export const defaultUserState = function (userID, name, team) {
 	const randomSafeZoneWidth = randomInt(SHIP_PROPS.DIAMETER, GAME_PROPS.WORLD.SAFE_ZONE_WIDTH - SHIP_PROPS.DIAMETER);
-  const x = (team === GAME_PROPS.TEAM.RED) ?
-    randomSafeZoneWidth :
-    GAME_PROPS.WORLD.WIDTH - GAME_PROPS.WORLD.SAFE_ZONE_WIDTH + randomSafeZoneWidth;
+	const x = (team === GAME_PROPS.TEAM.RED) ?
+		randomSafeZoneWidth :
+		GAME_PROPS.WORLD.WIDTH - GAME_PROPS.WORLD.SAFE_ZONE_WIDTH + randomSafeZoneWidth;
 
 	return {
 		userID,

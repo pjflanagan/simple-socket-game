@@ -65,6 +65,8 @@ App.Main.prototype = {
 
 		this.LaserGroup = this.game.add.group();
 		this.ShipGroup = this.game.add.group();
+		this.ToGroup = this.game.add.group();
+		this.ships = [];
 
 		this.socket = new ClientSocket(this);
 
@@ -75,10 +77,10 @@ App.Main.prototype = {
 	},
 
 	update: function () {
-		this.ShipGroup.forEach(function (ship) {
+		this.ships.forEach(function (ship) {
 			ship.update();
-    });
-    this.LaserGroup.forEach(function (laser) {
+		});
+		this.LaserGroup.forEach(function (laser) {
 			laser.update();
 		});
 		this.player.input(this.self, this.game, {
@@ -122,43 +124,44 @@ App.Main.prototype = {
 	},
 
 	updateHUD(type) {
-    switch (type) {
-    case 'score': 
-      this.hud.updateScores();
-    case 'laser':
-      this.hud.updateLaser();
-    default:
-      this.hud.updateLaser();
-      this.hud.updateScores();
-    }
-	},  
+		switch (type) {
+			case 'score':
+				this.hud.updateScores();
+			case 'laser':
+				this.hud.updateLaser();
+			default:
+				this.hud.updateLaser();
+				this.hud.updateScores();
+		}
+	},
 
 	laserHit: function (laser, ship) {
-		if (laser.team !== ship.team) {
+		if (laser.team !== ship.player.team) {
 			this.sendHit(laser, ship);
 		}
 	},
 
 	removeShip(ship) {
-		this.ShipGroup.remove(ship);
+		this.ToGroup.remove(ship.to);
+		this.ShipGroup.remove(ship.ship);
 	},
 
 	// SOCKET ----------------------------------------------------------------------------------------
 
 	recvAddSelf: function (data) {
 		this.self = new Ship(this, this.game, data, true);
-		this.ShipGroup.add(this.self);
-		this.game.camera.follow(this.self);
+		this.ships.push(this.self);
+		this.game.camera.follow(this.self.ship);
 		this.updateHUD('both');
 	},
 
 	recvAddUser: function (data) {
-		this.ShipGroup.add(new Ship(this, this.game, data));
+		this.ships.push(new Ship(this, this.game, data));
 		this.updateHUD('score');
 	},
 
 	recvRemoveUser: function (userID) {
-		this.ShipGroup.forEach((ship) => {
+		this.ships.forEach((ship) => {
 			if (ship.userID === userID)
 				ship.death();
 		});
@@ -172,21 +175,24 @@ App.Main.prototype = {
 	// KEY
 
 	sendKeyChange: function () {
+		// const position = this.self.getPosition();
+		const to = this.self.getTo();
 		this.socket.sendKeyChange({
 			userID: this.self.userID,
-      keys: this.player.keys,
-      position: {
-        x: this.self.body.x,
-        y: this.self.body.y,
-        t: new Date().getTime()
-      }
+			keys: this.player.keys,
+			to
+			// position: {
+			// 	x: position.x,
+			// 	y: position.y,
+			// 	t: new Date().getTime()
+			// }
 		});
 	},
 
 	recvKeyChange: function (data) {
-		this.ShipGroup.forEach((ship) => {
+		this.ships.forEach((ship) => {
 			if (ship.userID === data.userID) {
-				ship.keyChange(data.keys);
+				ship.keyChange(data);
 			}
 		});
 	},
@@ -201,7 +207,7 @@ App.Main.prototype = {
 	},
 
 	recvAngleChange: function (data) {
-		this.ShipGroup.forEach((ship) => {
+		this.ships.forEach((ship) => {
 			if (ship.userID === data.userID) {
 				ship.angleChange(data.angle);
 			}
@@ -217,13 +223,9 @@ App.Main.prototype = {
 			position: {
 				x,
 				y,
-        a: this.player.angle - 3 * Math.PI / 4,
-        t: new Date().getTime()
-			},
-			// v: {
-			//   x: this.self.body.velocity.x,
-			//   y: this.self.body.velocity.y 
-			// }
+				a: this.player.angle - 3 * Math.PI / 4,
+				t: new Date().getTime()
+			}
 		});
 	},
 
@@ -234,27 +236,27 @@ App.Main.prototype = {
 	// HIT
 
 	sendHit: function (laser, ship) {
-    // TODO: share if you are a host
-    if (this.self.userID === laser.userID) {
-      this.socket.sendHit({
-        target: {
-          userID: ship.userID,
-          team: ship.team,
-          angle: laser.angle
-        },
-        origin: {
-          userID: laser.userID,
-          team: laser.team
-        }
-      });
-    }
+		// TODO: share if you are a host
+		if (this.self.userID === laser.userID) {
+			this.socket.sendHit({
+				target: {
+					userID: ship.player.userID,
+					team: ship.player.team,
+					angle: laser.angle
+				},
+				origin: {
+					userID: laser.userID,
+					team: laser.team
+				}
+			});
+		}
 	},
 
 	recvHit: function ({ origin, target }) {
 		const playerUserID = this.self.userID;
 		const leave = () => { this.leave(this.self.name, this.self.score); }
 
-		this.ShipGroup.forEach(function (ship) {
+		this.ships.forEach(function (ship) {
 			if (ship.userID === target.userID) {
 				ship.death(target.angle);
 				if (playerUserID === target.userID) {

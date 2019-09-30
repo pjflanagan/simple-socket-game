@@ -64,8 +64,9 @@ class Player {
 		this.app.updateHUD('laser');
 		this.reload();
 
-		let x = this.app.self.body.x + this.app.self.body.halfWidth;
-		let y = this.app.self.body.y + this.app.self.body.halfHeight;
+		const body = this.app.self.getBody();
+		let x = body.x + body.halfWidth;
+		let y = body.y + body.halfHeight;
 		this.app.sendFire({ x, y });
 	}
 
@@ -84,8 +85,9 @@ class Player {
 
 		this.keys = keys;
 
-		const dx = (self.body.x + self.body.halfWidth) - game.camera.x - this.mouse.x;
-		const dy = (self.body.y + self.body.halfHeight) - game.camera.y - this.mouse.y;
+		const body = self.getBody();
+		const dx = (body.x + body.halfWidth) - game.camera.x - this.mouse.x;
+		const dy = (body.y + body.halfHeight) - game.camera.y - this.mouse.y;
 		this.angle = Math.atan2(dy, dx) - Math.PI / 4;
 	}
 };

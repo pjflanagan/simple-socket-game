@@ -3,16 +3,16 @@
 const EXPLOSION_PROPS = {
 	lifespan: () => (Math.random() * .5 + .5) * 500,
 	speed: () => (Math.random() * .5 + .5) * 360,
-  directedAngle: (a) => a + Math.PI / 4 + (Math.random() * .5) - 1,
-  undirectedAngle: () => Math.random() * Math.PI * 2,
-  count: () => Math.floor(Math.random() * 20) + 10,
-  randomFrames: (count) => {
-    const frames = [];
-    for(let i = 0; i < count; ++i ) {
-      frames.push(Math.floor(Math.random() * count))
-    }
-    return frames;
-  }
+	directedAngle: (a) => a + Math.PI / 4 + (Math.random() * .5) - 1,
+	undirectedAngle: () => Math.random() * Math.PI * 2,
+	count: () => Math.floor(Math.random() * 20) + 10,
+	randomFrames: (count) => {
+		const frames = [];
+		for (let i = 0; i < count; ++i) {
+			frames.push(Math.floor(Math.random() * count))
+		}
+		return frames;
+	}
 }
 
 /**
@@ -23,18 +23,18 @@ const Debris = function (game, { x, y, a }) {
 
 	this.anchor.set(.5, .5);
 	this.lifespan = EXPLOSION_PROPS.lifespan();
-  this.reset(x, y);
-  
+	this.reset(x, y);
+
 	this.animations.add('fire', EXPLOSION_PROPS.randomFrames(3));
 	this.animations.play('fire', 8, true);
 	this.scale.setTo(.25, .25);
 
 	// enable physics on the laser
 	game.physics.enable(this, Phaser.Physics.ARCADE);
-  const speed = EXPLOSION_PROPS.speed();
+	const speed = EXPLOSION_PROPS.speed();
 	const angle = (!!a) ? EXPLOSION_PROPS.directedAngle(a) : EXPLOSION_PROPS.undirectedAngle();
-  // const angle = EXPLOSION_PROPS.undirectedAngle()
-  game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
+	// const angle = EXPLOSION_PROPS.undirectedAngle()
+	game.physics.arcade.velocityFromRotation(angle, speed, this.body.velocity);
 };
 
 Debris.prototype = Object.create(Phaser.Sprite.prototype);
