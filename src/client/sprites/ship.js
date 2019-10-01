@@ -19,7 +19,8 @@ const directionAngles = {
  * @class To @extends Phaser.Sprite
  */
 const ToSprite = function (app, game, data, player) {
-	Phaser.Sprite.call(this, game, data.position.x, data.position.y); // TODO: Phaser 3 Phaser.GameObjects.Sprite
+  // TODO: if(debug) 'imgBlueLaser'
+	Phaser.Sprite.call(this, game, data.position.x, data.position.y); // TODO: Phaser 3 Phaser.GameObjects.Sprite imgBlueLaser
 	this.app = app;
 	this.game = game;
 	this.player = player;
@@ -56,9 +57,10 @@ ToSprite.prototype.update = function () {
 }
 
 ToSprite.prototype.keyChange = function ({ to, keys }) {
+  const { realPosition } = MATH.extrapolate(to, SHIP_PROPS.VELOCITY);
 	this.x = to.x;
 	this.y = to.y;
-	this.keys = keys;
+  this.keys = keys;
 }
 
 /** ----------------------------------------------------------------------------
@@ -189,7 +191,9 @@ export class Ship {
 	getTo() {
 		return {
 			x: this.to.x,
-			y: this.to.y
+      y: this.to.y,
+      a: this.to.angle,
+      t: new Date().getTime()
 		};
 	}
 

@@ -26,16 +26,16 @@ class Game {
   }
   
   fire(laser) {
-    this.lasers[laser.userID + laser.position.t] = laser;
+    // this.lasers[laser.userID + laser.position.t] = laser;
     this.socket.sendFire(laser);
   }
 
 	hit(data) {
-    const laser = this.lasers[laser.userID + laser.position.t];
-    if(!laser) {
-      return;
-    }
-    delete this.lasers[laser.userID + laser.position.t];
+    // const laser = this.lasers[data.origin.userID + laser.position.t];
+    // if(!laser) {
+    //   return;
+    // }
+    // delete this.lasers[laser.userID + laser.position.t];
     const originUser = this.users[data.origin.userID];
     const targetUser = this.users[data.target.userID]
 		if (!!originUser && !!targetUser) {

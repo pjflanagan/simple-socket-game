@@ -18,8 +18,8 @@ MATH.extrapolate = function(originalPosition, objectMaxVelocity) {
   const dt = (new Date().getTime() - originalPosition.t ) / 1000;
   const dv = dt * objectMaxVelocity;
   const realPosition = {
-    x: Math.sin(originalPosition.a) * dv + originalPosition.x,
-    y: Math.cos(originalPosition.a) * dv + originalPosition.y,
+    x: Math.cos(originalPosition.a) * dv + originalPosition.x,
+    y: Math.sin(originalPosition.a) * dv + originalPosition.y,
     a: originalPosition.a
   }
   return {

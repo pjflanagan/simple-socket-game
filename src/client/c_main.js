@@ -175,17 +175,11 @@ App.Main.prototype = {
 	// KEY
 
 	sendKeyChange: function () {
-		// const position = this.self.getPosition();
 		const to = this.self.getTo();
 		this.socket.sendKeyChange({
 			userID: this.self.userID,
 			keys: this.player.keys,
 			to
-			// position: {
-			// 	x: position.x,
-			// 	y: position.y,
-			// 	t: new Date().getTime()
-			// }
 		});
 	},
 
