@@ -82,10 +82,14 @@
 		$('p.prompt').text(`${scoreText}Type name and press enter...`);
 
 		// name
-		let name = window.gup('name') || '';
+    let name = window.gup('name') || '';
+    let loadTime = (name !== '') ? new Date().getTime() : 0;
 		$('p.name').text(name);
 
 		$(document).on('keypress', function (e) {
+      if(new Date().getTime() - loadTime < 2 * 1000) {
+        return;
+      }
 			var letter = String.fromCharCode(e.keyCode);
 			if (/[a-zA-Z0-9-_ ]/.test(letter)) {
 				name += letter;

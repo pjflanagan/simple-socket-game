@@ -5,7 +5,8 @@ import { defaultUserState, GAME_PROPS } from '../helpers'
 class Game {
 	constructor(socket) {
 		this.socket = socket;
-		this.users = {};
+    this.users = {};
+    this.lasers = {};
 	}
 
 	connection(socket, name) {
@@ -22,14 +23,24 @@ class Game {
 			delete this.users[socket.id];
 			this.socket.sendRemoveUser(socket.id);
 		}
-	}
+  }
+  
+  fire(laser) {
+    this.lasers[laser.userID + laser.position.t] = laser;
+    this.socket.sendFire(laser);
+  }
 
 	hit(data) {
+    const laser = this.lasers[laser.userID + laser.position.t];
+    if(!laser) {
+      return;
+    }
+    delete this.lasers[laser.userID + laser.position.t];
     const originUser = this.users[data.origin.userID];
     const targetUser = this.users[data.target.userID]
 		if (!!originUser && !!targetUser) {
 			// calc score
-			let pointsAwarded = Math.floor(targetUser.score / 2);
+			let pointsAwarded = Math.ceil(targetUser.score / 2);
 			data.origin.newScore = (pointsAwarded > 1) ? originUser.score + pointsAwarded : originUser.score + 1;
 
 			// remove the user from here

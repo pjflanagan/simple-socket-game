@@ -236,7 +236,7 @@ App.Main.prototype = {
 	// HIT
 
 	sendHit: function (laser, ship) {
-		// TODO: share if you are a host
+		// TODO: share if you are a host if this.isHost
 		if (this.self.userID === laser.userID) {
 			this.socket.sendHit({
 				target: {
@@ -265,7 +265,12 @@ App.Main.prototype = {
 			} else if (ship.userID == origin.userID) {
 				ship.rewardPoints(origin.newScore);
 			}
-		});
+    });
+    // this.LaserGroup.forEach(function(laser) {
+    //   if(laser.laserID === origin.laserID) {
+
+    //   }
+    // });
 		this.updateHUD('score');
 	},
 

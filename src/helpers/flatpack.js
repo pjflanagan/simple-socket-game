@@ -1,6 +1,8 @@
 
 import * as msgpack from 'msgpack-lite'
 
+// TODO: more descriptive error when provided a value that doesn't exist in the model
+
 export class Flatpack {
 
 	constructor(debug = false) {

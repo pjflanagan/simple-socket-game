@@ -78,11 +78,7 @@ class ServerSocket {
   
   recvFire(buffer) {
     const data = fp.decode(EVENTS.fire, buffer);
-    // TODO: add a bullet to here to track so we can remove it once it hits (call this.game)
-    // also so we can add it to the game later, perhaps they should have an initial time
-    // so it's new position can just be extrapolated
-    // this.game.fire(data);
-    this.sendFire(data);
+    this.game.fire(data);
   }
 
 	sendFire(data) {

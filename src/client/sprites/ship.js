@@ -1,14 +1,6 @@
-import { SHIP_PROPS, GAME_PROPS } from '../../helpers/index.js';
+import { SHIP_PROPS, GAME_PROPS, MATH } from '../../helpers/index.js';
 import { explosion } from './explosion.js';
 // import Phaser from 'phaser';
-
-Math.distance = function (a, b) {
-	return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-}
-
-Math.radians = function (degrees) {
-	return degrees * Math.PI / 180; // Converts from degrees to radians
-};
 
 const FOURTY_FIVE = 45;
 const directionAngles = {
@@ -112,7 +104,7 @@ ShipSprite.prototype = Object.create(Phaser.Sprite.prototype);
 ShipSprite.prototype.constructor = ShipSprite;
 
 ShipSprite.prototype.update = function () {
-	if (Math.distance(this, this.player.to) < 5) {
+	if (MATH.distance(this, this.player.to) < 5) {
 		this.body.velocity.setTo(0, 0);
 	} else {
 		this.game.physics.arcade.moveToObject(this, this.player.to, SHIP_PROPS.VELOCITY - 20); // TODO: velocity increases with distance
