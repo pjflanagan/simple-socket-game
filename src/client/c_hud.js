@@ -24,16 +24,16 @@ export class HUD {
 			const player = ship.player;
 			let team = 'red';
 			if (player.team === GAME_PROPS.TEAM.RED) {
-				red += player.score;
+				red += ship.score;
 			} else {
-				blue += player.score;
+				blue += ship.score;
 				team = 'blue';
 			}
 
 			const me = (player.userID === this.app.self.userID) ? 'me' : '';
 
 			if (i < 5) {
-				$('#hud #highscores').append(`<p class="${team} ${me}">${i} ${player.name} ${player.score}</p>`)
+				$('#hud #highscores').append(`<p class="${team} ${me}">${i} ${player.name} ${ship.score}</p>`)
 			}
 
 			++i;

@@ -12,7 +12,9 @@ export class Flatpack {
 		this._savedData = 0;
 	}
 
+  // adds a model to the pack with a timestamp
 	add(name, userModel) {
+    userModel.timestamp = '';
 		const format = this._makeModel(userModel);
 		this._modelsEnum[name] = this._models.length;
 		this._models.push(format.model);
@@ -22,7 +24,9 @@ export class Flatpack {
 		return this._modelsEnum;
 	}
 
+  // encodes the data with a timestamp
 	encode(modelType, data) {
+    data.timestamp = new Date().getTime();
 		const model = this._getModel(modelType);
 		const packet = this._pack(model, data);
 		const buffer = msgpack.encode(packet);
@@ -83,8 +87,13 @@ export class Flatpack {
 				}
 				// packet = { ...packet, ...subPacket };
 			} else {
-				const modelValue = model[key];
-				packet[modelValue] = value;
+        if (!!model[key]) {
+          const modelValue = model[key];
+          packet[modelValue] = value;
+          
+        } else if (this._debug) {
+          console.log(`[DEBUG] Key '${ key }' not found in model.`);
+        }
 			}
 		}
 		return packet;
@@ -96,7 +105,12 @@ export class Flatpack {
 			if (value instanceof Object) {
 				data[key] = this._unpack(value, packet);
 			} else {
-				data[key] = packet[value];
+        if(!!packet[value]) {
+          data[key] = packet[value];
+          
+        } else if (this._debug) {
+          console.log(`[DEBUG] Key '${ key }' not found in packet data.`);
+        }
 			}
 		}
 		return data;

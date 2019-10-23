@@ -20,6 +20,7 @@ const directionAngles = {
  */
 const ToSprite = function (app, game, data, player) {
   // TODO: if(debug) 'imgBlueLaser'
+  // TODO: extrapolate here too
 	Phaser.Sprite.call(this, game, data.position.x, data.position.y); // TODO: Phaser 3 Phaser.GameObjects.Sprite imgBlueLaser
 	this.app = app;
 	this.game = game;
@@ -56,17 +57,17 @@ ToSprite.prototype.update = function () {
 	this.game.physics.arcade.velocityFromAngle(directionAngles[y + x], velocity, this.body.velocity);
 }
 
-ToSprite.prototype.keyChange = function ({ to, keys }) {
-  const { realPosition } = MATH.extrapolate(to, SHIP_PROPS.VELOCITY);
+ToSprite.prototype.keyChange = function ({ timestamp, to, keys }) {
+  // const { realPosition } = MATH.extrapolate(timestamp, to, SHIP_PROPS.VELOCITY);
 	this.x = to.x;
 	this.y = to.y;
   this.keys = keys;
 }
 
 /** ----------------------------------------------------------------------------
- * @class ShipSprite @extends Phaser.Sprite
+ * @class Body @extends Phaser.Sprite
  */
-const ShipSprite = function (app, game, data, player) {
+const Body = function (app, game, data, player) {
 	Phaser.Sprite.call(this, game, data.position.x, data.position.y, 'imgShip'); // TODO: Phaser 3 Phaser.GameObjects.Sprite
 	this.app = app;
 	this.game = game;
@@ -102,10 +103,10 @@ const ShipSprite = function (app, game, data, player) {
 	}
 };
 
-ShipSprite.prototype = Object.create(Phaser.Sprite.prototype);
-ShipSprite.prototype.constructor = ShipSprite;
+Body.prototype = Object.create(Phaser.Sprite.prototype);
+Body.prototype.constructor = Body;
 
-ShipSprite.prototype.update = function () {
+Body.prototype.update = function () {
 	if (MATH.distance(this, this.player.to) < 5) {
 		this.body.velocity.setTo(0, 0);
 	} else {
@@ -118,7 +119,7 @@ ShipSprite.prototype.update = function () {
 	}
 }
 
-ShipSprite.prototype.death = function (angle) {
+Body.prototype.death = function (angle) {
 	if (!!this.text) {
 		this.text.kill();
 	}
@@ -130,7 +131,7 @@ ShipSprite.prototype.death = function (angle) {
 	this.kill();
 };
 
-ShipSprite.prototype.angleChange = function (angle) {
+Body.prototype.angleChange = function (angle) {
 	this.rotation = angle;
 }
 
@@ -148,7 +149,7 @@ export class Ship {
 		this.score = data.score;
 		this.isSelf = isSelf;
 
-		this.ship = new ShipSprite(app, game, data, this);
+		this.ship = new Body(app, game, data, this);
 		this.app.ShipGroup.add(this.ship);
 
 		this.to = new ToSprite(app, game, data, this);
@@ -160,14 +161,14 @@ export class Ship {
 		this.ship.update();
 	}
 
-	keyChange({ to, keys }) {
-		this.to.keyChange({ to, keys });
+	keyChange(data) {
+		this.to.keyChange(data);
 		this.ship.update();
 	}
 
 	rewardPoints(newScore) {
-		this.score = newScore;
-		this.ship.score = newScore;
+		this.score = newScore; // update so sharing is easy
+		this.ship.score = newScore; // update so ShipGroup can be sorted
 	}
 
 	angleChange(angle) {
@@ -192,8 +193,7 @@ export class Ship {
 		return {
 			x: this.to.x,
       y: this.to.y,
-      a: this.to.angle,
-      t: new Date().getTime()
+      a: this.to.angle
 		};
 	}
 
@@ -214,7 +214,7 @@ export class Ship {
 			position: {
 				x: this.ship.x,
 				y: this.ship.y,
-				a: this.ship.angle
+        a: this.ship.angle
 			},
 			// to: {
 			// 	x: this.to.x,

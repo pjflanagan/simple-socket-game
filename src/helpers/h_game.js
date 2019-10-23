@@ -14,8 +14,8 @@ export const MATH = {
   }
 };
 
-MATH.extrapolate = function(originalPosition, objectMaxVelocity) {
-  const dt = (new Date().getTime() - originalPosition.t ) / 1000;
+MATH.extrapolate = function(originalTimestamp, originalPosition, objectMaxVelocity) {
+  const dt = (new Date().getTime() - originalTimestamp ) / 1000;
   const dv = dt * objectMaxVelocity;
   const realPosition = {
     x: Math.cos(originalPosition.a) * dv + originalPosition.x,
@@ -34,7 +34,8 @@ export const GAME_PROPS = {
 		WIDTH: 3000,
 		HEIGHT: 1200,
 		SAFE_ZONE_WIDTH: 300
-	},
+  },
+  DELAY: 100,
 	ASTEROIDS: 20,
 	TEAM: {
 		RED: 0,

@@ -3,6 +3,7 @@ import { Ship, Laser } from './sprites/index.js';
 import { GAME_PROPS, SHIP_PROPS } from '../helpers/index.js';
 import { Player } from './c_player.js';
 import { HUD } from './c_hud.js';
+import { Interpolator } from './c_interpolator.js';
 // TODO: import Phaser from 'phaser';
 
 /**
@@ -68,7 +69,8 @@ App.Main.prototype = {
 		this.ToGroup = this.game.add.group();
 		this.ships = [];
 
-		this.socket = new ClientSocket(this);
+    this.interpolater = new Interpolator(this, GAME_PROPS.DELAY);
+    this.socket = new ClientSocket(this);
 
 		this.keyLeft = this.game.input.keyboard.addKey(Phaser.KeyCode.A);
 		this.keyRight = this.game.input.keyboard.addKey(Phaser.KeyCode.D);
@@ -77,6 +79,7 @@ App.Main.prototype = {
 	},
 
 	update: function () {
+    this.interpolater.update();
 		this.ships.forEach(function (ship) {
 			ship.update();
 		});
@@ -217,8 +220,7 @@ App.Main.prototype = {
 			position: {
 				x,
 				y,
-				a: this.player.angle - 3 * Math.PI / 4,
-				t: new Date().getTime()
+				a: this.player.angle - 3 * Math.PI / 4
 			}
 		});
 	},

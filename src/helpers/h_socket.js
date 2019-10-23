@@ -11,7 +11,6 @@ const position = {
 	x: '',
 	y: '',
 	a: '', // angle
-	t: '' // timestamp
 };
 
 const state = {

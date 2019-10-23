@@ -7,7 +7,7 @@ import { explosion } from './explosion.js';
  */
 var Laser = function (app, game, data) {
   const image = (data.team === GAME_PROPS.TEAM.RED) ? 'imgRedLaser' : 'imgBlueLaser';
-  const { realPosition, distanceTraveled } = MATH.extrapolate(data.position, LASER_PROPS.SPEED);
+  const { realPosition, distanceTraveled } = MATH.extrapolate(data.timestamp, data.position, LASER_PROPS.SPEED);
   Phaser.Sprite.call(this, game, realPosition.x, realPosition.y, image);
   this.app = app;
   this.userID = data.userID;
