@@ -31,7 +31,7 @@ MATH.extrapolate = function(originalPosition, objectMaxVelocity) {
 export const GAME_PROPS = {
 	MAX_SHIPS: 30,
 	WORLD: {
-		WIDTH: 1200, // 3000
+		WIDTH: 3000,
 		HEIGHT: 1200,
 		SAFE_ZONE_WIDTH: 300
 	},
