@@ -5,7 +5,7 @@ const keys = {
 	down: '',
 	left: '',
 	right: ''
-}
+};
 
 const position = {
 	x: '',
