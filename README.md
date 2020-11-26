@@ -1,3 +1,5 @@
+![alt text](https://raw.githubusercontent.com/pjflanagan/simple-socket-game/master/assets/logo.jpg "Space Fighters Logo")
+
 # [Simple Socket Game](http://simple-socket-game.herokuapp.com/)
 
 A simple socket game using Socket.io and Phaser. Expands on [Space Fighters](http://space-fighters.herokuapp.com/).
