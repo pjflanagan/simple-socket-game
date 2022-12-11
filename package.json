@@ -15,7 +15,7 @@
 		"babel-register": "^6.26.0",
 		"body-parser": "^1.18.3",
 		"ejs": "^2.6.1",
-		"express": "^4.17.1",
+		"express": "^4.17.3",
 		"lodash": "^4.17.19",
 		"msgpack-lite": "^0.1.26",
 		"path": "^0.12.7",
